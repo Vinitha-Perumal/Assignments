@@ -43,4 +43,3 @@ int Get (LinkedList* list, int index);
 void Delete (LinkedList* list);
 
 #endif
-
