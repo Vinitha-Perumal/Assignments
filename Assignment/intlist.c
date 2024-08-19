@@ -44,7 +44,7 @@ void Add (LinkedList* list, int val) {
 // Function to insert an element at a particular index (zero-based)
 int Insert (LinkedList* list, int index, int val) {
 	if (index < 0) {
-		printf ("invalid index: %d\n", index);
+		printf ("invalid index: %d\n", index); // Handle invalid index
 		return 0;
 	}
 	Node* newNode = (Node*)malloc (sizeof (Node));
@@ -94,9 +94,9 @@ int RemoveAt (LinkedList* list, int index) {
 		printf ("index is out of bound: %d\n", index);
 		return 0;
 	}
-	if (prev == NULL)
+	if (prev == NULL) {
 		list->head = current->next;
-
+	}
 	else {
 		prev->next = current->next;
 	}

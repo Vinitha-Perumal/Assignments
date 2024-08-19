@@ -20,6 +20,7 @@
 // intlist.h
 // Program for Linked List Header file.
 // ------------------------------------------------------------------------------------------------
+
 #ifndef INTLIST_H
 #define INTLIST_H
 // Define the structure for a node in the linked list
@@ -31,6 +32,7 @@ typedef struct Node {
 typedef struct LinkedList {
 	Node* head;
 } LinkedList;
+
 // Function prototypes
 LinkedList* Create ();
 void PrintList (LinkedList* list);
@@ -43,3 +45,4 @@ int Get (LinkedList* list, int index);
 void Delete (LinkedList* list);
 
 #endif
+

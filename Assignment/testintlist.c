@@ -37,9 +37,6 @@ int main () {
 	Add (list, 3);
 	Add (list, 2);
 	Add (list, 5);
-	Add (list, 2);
-	Add (list, 3);
-	Add (list, 2);
 	printf ("Initial List is:\n");
 	PrintList (list);
 	printf ("\n");
@@ -55,7 +52,7 @@ int main () {
 	printf ("\n");
 
 	// Remove an element by value
-	Remove (list, 2);
+	Remove (list, 5);
 	PrintList (list);
 	printf ("\n");
 
@@ -70,7 +67,7 @@ int main () {
 	// Delete the list
 	Delete (list);
 	printf ("The list has been deleted\n");
-	//PrintList (list);
+	PrintList (list);
 	printf ("\n");
 
 	return 0;
