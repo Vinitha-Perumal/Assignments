@@ -26,7 +26,7 @@ void PrintList (LinkedList* list) {
 int main () {
 	LinkedList* list = Create ();
 	if (list == NULL) {
-		printf ("Failed to create the list\n");
+		fprintf (stderr, "Failed to create the list\n");
 		return 1;
 	}
 	printf ("The list has been created!\n");
@@ -42,17 +42,37 @@ int main () {
 	printf ("\n");
 
 	// Insert an element
-	Insert (list, 1, 5);
-	PrintList (list);
+	int indexToInsert = 1;
+	int valToInsert = 5;
+	int res = Insert (list, indexToInsert, valToInsert);
+	if (res == SUCCESS) {
+		printf ("List after inserting %d at index %d:\n", valToInsert, indexToInsert);
+	}
+	else {
+		fprintf (stderr, "Failed to insert element %d at index %d\n", valToInsert, indexToInsert);
+	}
+   PrintList (list);
 	printf ("\n");
 
 	// Remove an element by index
-	RemoveAt (list, 2);
+	int indexToRemoveAt = 2;
+	if (RemoveAt (list, indexToRemoveAt) == SUCCESS) {
+		printf ("List after removing element at index %d:\n", indexToRemoveAt);
+	}
+	else {
+		fprintf (stderr, "Failed to remove element at index %d\n", indexToRemoveAt);
+	}
 	PrintList (list);
 	printf ("\n");
 
 	// Remove an element by value
-	Remove (list, 5);
+	int valueToRemove = 5;
+	if (Remove (list, valueToRemove) == SUCCESS) {
+		printf ("List after removing element %d:\n", valueToRemove);
+	}
+	else {
+		fprintf (stderr, "Failed to remove element %d\n", valueToRemove);
+	}
 	PrintList (list);
 	printf ("\n");
 
@@ -61,13 +81,19 @@ int main () {
 	printf ("\n");
 
 	// Get an element by index
-	Get (list, 0);
+	int indexToGet = 0;
+	int value = Get (list, indexToGet);
+	if (value == ERROR_OUT_OF_BOUNDS) {
+		fprintf (stderr, "Index %d is out of bounds\n", indexToGet);
+	}
+	else {
+		printf ("Element at index %d is: %d\n", indexToGet, value);
+	}
 	printf ("\n");
 
 	// Delete the list
 	Delete (list);
 	printf ("The list has been deleted\n");
-	//PrintList (list);
 	printf ("\n");
 
 	return 0;

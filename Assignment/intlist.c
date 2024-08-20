@@ -5,33 +5,39 @@
 // intlist.c
 // Program for Linked List functions.
 // ------------------------------------------------------------------------------------------------
-#include <stdio.h>
-#include <stdlib.h>
+
 #include <malloc.h>
 #include "intlist.h"
-// Function to create a new linked list
+
+/// <summary>
+/// Function to create a new linked list
+/// </summary>
+/// <returns>Pointer to the newly created LinkedList</returns>
 LinkedList* Create () {
 	LinkedList* list = (LinkedList*)malloc (sizeof (LinkedList)); // Allocate memory for the list structure
 	if (list == NULL) {
-		printf ("Memory allocation failed\n");
 		return NULL;
 	}
 	list->head = NULL; // Initialize the head pointer to NULL, Indicating an empty list
 	return list;
 }
 
-// Function to add an element to the end of the list
-void Add (LinkedList* list, int val) {
+/// <summary>
+/// Add an element to the end of the list
+/// </summary>
+/// <param name="list"></param>
+/// <param name="val"></param>
+/// <returns>Error code (if any)</returns>
+int Add (LinkedList* list, int val) {
 	Node* newNode = (Node*)malloc (sizeof (Node)); // Allocate memory for the new node
 	if (newNode == NULL) {
-		fprintf (stderr, "Memory allocation failed!\n");
-		exit (EXIT_FAILURE);
+		return ERROR_MEMORY_ALLOCATION;
 	}
 	newNode->data = val;
 	newNode->next = NULL;
-	if (list->head == NULL) {
+	if (list->head == NULL) 
 		list->head = newNode;
-	}
+	
 	else {
 		Node* current = list->head;
 		while (current->next != NULL) {
@@ -39,18 +45,23 @@ void Add (LinkedList* list, int val) {
 		}
 		current->next = newNode;
 	}
+	return SUCCESS;
 }
 
-// Function to insert an element at a particular index (zero-based)
+/// <summary>
+/// Insert an element at a particular index (zero-based)
+/// </summary>
+/// <param name="list"></param>
+/// <param name="index"></param>
+/// <param name="val"></param>
+/// <returns>Error code (if any)</returns>
 int Insert (LinkedList* list, int index, int val) {
 	if (index < 0) {
-		printf ("invalid index: %d\n", index); // Handle invalid index
-		return 0;
+		return ERROR_INVALID_INDEX;
 	}
 	Node* newNode = (Node*)malloc (sizeof (Node));
 	if (newNode == NULL) {
-		printf ("Memory allocation is failed!\n");
-		exit (EXIT_FAILURE);
+		return ERROR_MEMORY_ALLOCATION;
 	}
 	newNode->data = val;
 	if (index == 0) {
@@ -65,22 +76,24 @@ int Insert (LinkedList* list, int index, int val) {
 			i++;
 		}
 		if (current == NULL) {
-			printf ("index is out of bound:%d\n", index);
 			free (newNode);
-			return 0;
+			return ERROR_OUT_OF_BOUNDS;
 		}
 		newNode->next = current->next;
 		current->next = newNode;
 	}
-	printf ("List after inserting %d at index %d:\n", val, index);
-	return 1;
+	return SUCCESS;
 }
 
-//Function to remove the element at a particular index (zero-based)
+/// <summary>
+/// Remove the element at a particular index (zero-based)
+/// </summary>
+/// <param name="list"></param>
+/// <param name="index"></param>
+/// <returns>Error code (if any)</returns>
 int RemoveAt (LinkedList* list, int index) {
 	if (index < 0) {
-		printf ("Invalid Index: %d\n", index);
-		return 0;
+		return ERROR_INVALID_INDEX;
 	}
 	Node* current = list->head;
 	Node* prev = NULL;
@@ -91,45 +104,54 @@ int RemoveAt (LinkedList* list, int index) {
 		i++;
 	}
 	if (current == NULL) {
-		printf ("index is out of bound: %d\n", index);
-		return 0;
+		return ERROR_OUT_OF_BOUNDS;
 	}
-	if (prev == NULL) {
+	if (prev == NULL)
 		list->head = current->next;
-	}
-	else {
+	
+	else 
 		prev->next = current->next;
-	}
+	
 	free (current);
-	printf ("List after removing element at index %d:\n", index);
-	return 1;
+	return SUCCESS;
 }
 
-//Function to remove the first occurrence of a specific element
-void Remove (LinkedList* list, int val) {
+/// <summary>
+/// Remove the first occurrence of a specific element
+/// </summary>
+/// <param name="list"></param>
+/// <param name="val"></param>
+/// <returns>Error code (if any)</returns>
+int Remove (LinkedList* list, int val) {
 	if (list->head == NULL) {
-		return;
+		return ERROR_NOT_FOUND;
 	}
 	Node* current = list->head;
 	Node* prev = NULL;
 	if (current != NULL && current->data == val) {
 		list->head = current->next; // Remove the head node if it contains the value
 		free (current);
-		return;
+		return SUCCESS;
 	}
+   // Traverse the list to find the first node with the given value
+	// If found, update the previous node's next pointer to bypass the node to be removed
 	while (current != NULL && current->data != val) {
 		prev = current;
-		current = current->next; // Traverse to find the node with the value
+		current = current->next;
 	}
-	if (current == NULL) {
-		return;
-	}
+	if (current == NULL) 
+		return ERROR_NOT_FOUND;
+
 	prev->next = current->next;
 	free (current);
-	printf ("List after removing first occurrence of element %d\n", val);
+	return SUCCESS;
 }
 
-// Function to Return the number of elements in the list
+/// <summary>
+/// Return the number of elements in the list
+/// </summary>
+/// <param name="list"></param>
+/// <returns>The number of nodes in the linked list</returns>
 int Count (LinkedList* list) {
 	int count = 0;
 	Node* current = list->head;
@@ -140,25 +162,29 @@ int Count (LinkedList* list) {
 	return count;
 }
 
-//Function to get the element at a particular index(zero-based)
+/// <summary>
+/// Get the element at a particular index(zero-based)
+/// </summary>
+/// <param name="list"></param>
+/// <param name="index"></param>
+/// <returns>The value of the node at the specified index</returns>
 int Get (LinkedList* list, int index) {
 	Node* current = list->head;
 	for (int i = 0; i < index; i++) {
 		if (current == NULL) {
-			printf ("Index %d is out of bound\n", index);
-			return -1;
+			return ERROR_OUT_OF_BOUNDS;
 		}
 		current = current->next;
 	}
 	if (current == NULL) {
-		printf ("Index %d is out of bound\n", index);
-		return -1;
+		return ERROR_OUT_OF_BOUNDS;
 	}
-	printf ("Getting an element at index %d is:%d\n", index, current->data);
 	return current->data;
 }
 
-// Function to delete the list and all its elements
+/// <summary>
+/// Delete the list
+/// </summary>
 void Delete (LinkedList* list) {
 	Node* current = list->head;
 	Node* next;

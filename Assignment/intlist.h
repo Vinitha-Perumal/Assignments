@@ -23,11 +23,19 @@
 
 #ifndef INTLIST_H
 #define INTLIST_H
+// Error codes
+#define SUCCESS 0                  
+#define ERROR_MEMORY_ALLOCATION -1 
+#define ERROR_INVALID_INDEX -2    
+#define ERROR_OUT_OF_BOUNDS -3     
+#define ERROR_NOT_FOUND -4         
+
 // Define the structure for a node in the linked list
 typedef struct Node {
 	int data;
 	struct Node* next;
 } Node;
+
 // Define the structure for the linked list
 typedef struct LinkedList {
 	Node* head;
@@ -36,10 +44,10 @@ typedef struct LinkedList {
 // Function prototypes
 LinkedList* Create ();
 void PrintList (LinkedList* list);
-void Add (LinkedList* list, int val);
+int Add (LinkedList* list, int val);
 int Insert (LinkedList* list, int index, int val);
 int RemoveAt (LinkedList* list, int index);
-void Remove (LinkedList* list, int val);
+int Remove (LinkedList* list, int val);
 int Count (LinkedList* list);
 int Get (LinkedList* list, int index);
 void Delete (LinkedList* list);
