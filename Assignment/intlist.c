@@ -6,18 +6,18 @@
 // Program for Linked List functions.
 // ------------------------------------------------------------------------------------------------
 
-#include <malloc.h>
+#include <malloc.h> 
 #include "intlist.h"
 
 LinkedList* Create () {
-   LinkedList* list = (LinkedList*)malloc (sizeof (LinkedList)); // Allocate memory for the list structure
+   LinkedList* list = (LinkedList*)malloc (sizeof (LinkedList)); 
    if (list == NULL) return NULL;
    list->head = NULL; // Initialize the head pointer to NULL, Indicating an empty list
    return list;
 }
 
 int Add (LinkedList* list, int val) {
-   Node* newNode = (Node*)malloc (sizeof (Node)); // Allocate memory for the new node
+   Node* newNode = (Node*)malloc (sizeof (Node));
    if (newNode == NULL) return ERROR_MEMORY_ALLOCATION;
    newNode->data = val;
    newNode->next = NULL;
@@ -62,11 +62,10 @@ int RemoveAt (LinkedList* list, int index) {
    if (index < 0) return ERROR_INVALID_INDEX;
    Node* current = list->head;
    Node* prev = NULL;
-   int i = 0;
-   while (current != NULL && i < index) {
+   for (int i = 0; i < index; i++) {
+      if (current == NULL) return ERROR_OUT_OF_BOUNDS;
       prev = current;
-      current = current->next; // Traverse to the desired index
-      i++;
+      current = current->next;
    }
    if (current == NULL) return ERROR_OUT_OF_BOUNDS;
    if (prev == NULL) list->head = current->next;
@@ -106,14 +105,16 @@ int Count (LinkedList* list) {
    return count;
 }
 
-int Get (LinkedList* list, int index) {
+int Get (LinkedList* list, int index, int* val) {
+   if (index < 0) return ERROR_INVALID_INDEX;
    Node* current = list->head;
    for (int i = 0; i < index; i++) {
       if (current == NULL) return ERROR_OUT_OF_BOUNDS;
       current = current->next;
    }
    if (current == NULL) return ERROR_OUT_OF_BOUNDS;
-   return current->data;
+   *val = current->data;
+   return SUCCESS;
 }
 
 void Delete (LinkedList* list) {

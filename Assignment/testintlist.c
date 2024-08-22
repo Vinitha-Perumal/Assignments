@@ -31,7 +31,7 @@ int main () {
    printf ("\n");
 
    // Adding elements
-   Add (list, 7);
+   Add (list,-3);
    Add (list, 3);
    Add (list, 2);
    Add (list, 5);
@@ -67,9 +67,10 @@ int main () {
    printf ("\n");
 
    // Get an element by index
-   int value = Get (list, 0);
-   if (value == ERROR_OUT_OF_BOUNDS) fprintf (stderr, "Index %d is out of bounds\n", 0);
-   else printf ("Element at index %d is: %d\n", 0, value);
+   int val;
+   res = Get (list, 0, &val);
+   if (res == ERROR_OUT_OF_BOUNDS) fprintf (stderr, "Failed to get element at index %d, error code: %d\n", 0, res); 
+   else printf ("Element at index %d is: %d\n", 0, val);
    printf ("\n");
 
    // Delete the list

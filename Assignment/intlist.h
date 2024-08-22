@@ -65,7 +65,7 @@ int Remove (LinkedList* list, int val);
 int Count (LinkedList* list);
 
 /// <summary>Retrieves the value of the node at the specified index in the list.</summary>
-int Get (LinkedList* list, int index);
+int Get (LinkedList* list, int index, int* val);
 
 /// <summary>Frees all nodes and the list structure itself.</summary>
 void Delete (LinkedList* list);
