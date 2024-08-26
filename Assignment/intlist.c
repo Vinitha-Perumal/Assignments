@@ -5,10 +5,8 @@
 // intlist.c
 // Program for Linked List functions.
 // ------------------------------------------------------------------------------------------------
-
 #include <malloc.h> 
 #include "intlist.h"
-
 LinkedList* Create () {
    LinkedList* list = (LinkedList*)malloc (sizeof (LinkedList)); 
    if (list == NULL) return NULL;
@@ -62,12 +60,11 @@ int RemoveAt (LinkedList* list, int index) {
    if (index < 0) return ERROR_INVALID_INDEX;
    Node* current = list->head;
    Node* prev = NULL;
+   if (current == NULL) return ERROR_OUT_OF_BOUNDS;
    for (int i = 0; i < index; i++) {
-      if (current == NULL) return ERROR_OUT_OF_BOUNDS;
       prev = current;
       current = current->next;
    }
-   if (current == NULL) return ERROR_OUT_OF_BOUNDS;
    if (prev == NULL) list->head = current->next;
    else prev->next = current->next;
    free (current);
@@ -108,11 +105,10 @@ int Count (LinkedList* list) {
 int Get (LinkedList* list, int index, int* val) {
    if (index < 0) return ERROR_INVALID_INDEX;
    Node* current = list->head;
+   if (current == NULL) return ERROR_OUT_OF_BOUNDS;
    for (int i = 0; i < index; i++) {
-      if (current == NULL) return ERROR_OUT_OF_BOUNDS;
       current = current->next;
    }
-   if (current == NULL) return ERROR_OUT_OF_BOUNDS;
    *val = current->data;
    return SUCCESS;
 }
