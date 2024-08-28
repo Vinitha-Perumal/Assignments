@@ -127,12 +127,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="intlist.c" />
-    <ClCompile Include="testintlist.c" />
+    <ClCompile Include="Conversion.c" />
+
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="intlist.h" />
-  </ItemGroup>
+
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
