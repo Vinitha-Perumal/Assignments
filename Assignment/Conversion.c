@@ -22,17 +22,14 @@ void DecToBinary (int n) {
       isNegative = 1;
    }
    while (n > 0) {
-      binary[i] = n % 2;
+      binary[i++] = n % 2;
       n /= 2;
-      i++;
    }
    // If the number was negative,apply two's complement
    if (isNegative) {
       if (i <= 7)   bitLength = 8;
       else   bitLength = 16;
-      for (int j = i; j < bitLength; j++) {
-         binary[j] = 0;
-      }
+      for (int j = i; j < bitLength; j++)   binary[j] = 0;
       i = bitLength;
       for (int j = 0; j < i; j++)   binary[j] = 1 - binary[j]; // Invert the bits for 2's complement
       int carry = 1;
@@ -50,9 +47,7 @@ void DecToBinary (int n) {
    }
    else {
       bitLength = (i <= 8) ? 8 : i;
-      for (int j = i; j < bitLength; j++) {
-         binary[j] = 0;
-      }
+      for (int j = i; j < bitLength; j++)   binary[j] = 0;  
       i = bitLength;
    }
    for (int k = i - 1; k >= 0; k--)   printf ("%d", binary[k]);   
@@ -66,10 +61,8 @@ void DecToHexa (int n) {
    unsigned int num = (unsigned int)n;   // Handle negative numbers by using unsigned int
    while (num > 0) {
       int rem = num % 16;
-      if (rem < 10)  hexa[i] = rem + '0';
-      else  hexa[i] = rem - 10 + 'A';
+      hexa[i++] = (rem < 10) ? rem + '0' : rem - 10 + 'A';
       num /= 16;
-      i++;
    }
    int requiredDigits = (bitLength + 3) / 4;
    while (i < requiredDigits) {
