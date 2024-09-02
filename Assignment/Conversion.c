@@ -11,12 +11,14 @@
 
 void DecToBinary (int n);
 void DecToHexa (int n);
-int bitLength;
+int mBitLength;
 /// <summary>Decimal number to binary Conversion</summary>
 void DecToBinary (int n) {
-   int binary[32], i = 0;
-   int isNegative = 0; // Flag is to check if the number is negative
-   if (n == 0)   printf ("0");  
+   int binary[32], i = 0, isNegative = 0; // Flag is to check if the number is negative
+   if (n == 0) {
+      printf ("0");
+      return;
+   }
    if (n < 0) {
       n = -n;
       isNegative = 1;
@@ -27,11 +29,11 @@ void DecToBinary (int n) {
    }
    // If the number was negative,apply two's complement
    if (isNegative) {
-      if (i <= 7)   bitLength = 8;
-      else   bitLength = 16;
-      for (int j = i; j < bitLength; j++)   binary[j] = 0;
-      i = bitLength;
-      for (int j = 0; j < i; j++)   binary[j] = 1 - binary[j]; // Invert the bits for 2's complement
+      if (i <= 7) mBitLength = 8;
+      else mBitLength = 16;
+      for (int j = i; j < mBitLength; j++) binary[j] = 0;
+      i = mBitLength;
+      for (int j = 0; j < i; j++) binary[j] = 1 - binary[j]; // Invert the bits for 2's complement
       int carry = 1;
       for (int j = 0; j < i; j++) {
          binary[j] = binary[j] + carry;
@@ -46,30 +48,30 @@ void DecToBinary (int n) {
       }
    }
    else {
-      bitLength = (i <= 8) ? 8 : i;
-      for (int j = i; j < bitLength; j++)   binary[j] = 0;  
-      i = bitLength;
+      mBitLength = (i <= 8) ? 8 : i;
+      for (int j = i; j < mBitLength; j++) binary[j] = 0;
+      i = mBitLength;
    }
-   for (int k = i - 1; k >= 0; k--)   printf ("%d", binary[k]);   
+   for (int k = i - 1; k >= 0; k--) printf ("%d", binary[k]);
 }
 
 /// <summary>Decimal number to Hexadecimal Conversion</summary>
 void DecToHexa (int n) {
    char hexa[32];
    int i = 0;
-   if (n == 0)   printf ("0");  
+   if (n == 0) {
+      printf ("0");
+      return;
+   }
    unsigned int num = (unsigned int)n;   // Handle negative numbers by using unsigned int
    while (num > 0) {
       int rem = num % 16;
       hexa[i++] = (rem < 10) ? rem + '0' : rem - 10 + 'A';
       num /= 16;
    }
-   int requiredDigits = (bitLength + 3) / 4;
-   while (i < requiredDigits) {
-      hexa[i] = '0';
-      i++;
-   }
-   for (int k = i - 1; k >= 0; k--)   printf ("%c", hexa[k]);
+   int requiredDigits = (mBitLength + 3) / 4;
+   while (i < requiredDigits) hexa[i++] = '0';
+   for (int k = i - 1; k >= 0; k--) printf ("%c", hexa[k]);
 }
 
 int main () {
