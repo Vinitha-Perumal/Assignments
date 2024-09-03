@@ -10,15 +10,13 @@
 #include <stdio.h>
 
 void DecToBinary (int n);
+void DecimalToBinary (int n);
 void DecToHexa (int n);
 int mBitLength;
+
 /// <summary>Decimal number to binary Conversion</summary>
 void DecToBinary (int n) {
    int binary[32], i = 0, isNegative = 0; // Flag is to check if the number is negative
-   if (n == 0) {
-      printf ("0");
-      return;
-   }
    if (n < 0) {
       n = -n;
       isNegative = 1;
@@ -55,15 +53,31 @@ void DecToBinary (int n) {
    for (int k = i - 1; k >= 0; k--) printf ("%d", binary[k]);
 }
 
+/// <summary>Decimal number to Binary Conversion using Shift Operator</summary>
+void DecimalToBinary (int n) {
+   int numBits = sizeof (int) * 8; 
+   int isNegative = (n < 0); // Check if the number is negative
+   if (n >= -128 && n <= 127) mBitLength = 8;
+   else mBitLength = 16;
+   if (isNegative) n = ~(-n) + 1; // Compute two's complement
+   unsigned int mask = 1 << (mBitLength - 1); // Create a mask to extract each bit
+   for (int i = 0; i < mBitLength; i++) {
+      printf ("%d", (n & mask) ? 1 : 0);
+      mask >>= 1;
+   }
+   printf ("\n");
+}
+
 /// <summary>Decimal number to Hexadecimal Conversion</summary>
 void DecToHexa (int n) {
    char hexa[32];
-   int i = 0;
-   if (n == 0) {
-      printf ("0");
-      return;
+   int i = 0, isNegative = 0;  // Flag to check if the number is negative
+   unsigned int num;
+   if (n < 0) {
+      num = (unsigned int)n;  // Handle negative numbers by using unsigned int
+      isNegative = 1;
    }
-   unsigned int num = (unsigned int)n;   // Handle negative numbers by using unsigned int
+   else num = (unsigned int)n;
    while (num > 0) {
       int rem = num % 16;
       hexa[i++] = (rem < 10) ? rem + '0' : rem - 10 + 'A';
@@ -78,10 +92,16 @@ int main () {
    int number;
    printf ("Enter decimal Number: ");
    scanf_s ("%d", &number);
-   printf ("Binary: ");
+   printf ("\nBinary: ");
    DecToBinary (number);
+   printf ("\nBinary value using shift operator: ");
+   DecimalToBinary (number);  
    printf ("\nHexadecimal: ");
    DecToHexa (number);
+   
+   // printing hexadecimal number using format specifier %X 
+   printf ("\nHexadecimal value using format specfier: ");
+   printf ("%X",number);
    printf ("\n");
    return 0;
 }
