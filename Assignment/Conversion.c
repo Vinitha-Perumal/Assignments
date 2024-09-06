@@ -11,8 +11,9 @@
 
 int mBitLength;
 
-void DecToBinary (int n, char* binaryStr) {
-   int binary[32], i = 0, k, isNegative = 0; // Flag is to check if the number is negative
+char* DecToBinary (int n) {
+   int binary[32] = { 0 }, i = 0, isNegative = 0; // Flag is to check if the number is negative
+   char binaryStr[33];
    if (n < 0) {
       n = -n;
       isNegative = 1;
@@ -23,12 +24,11 @@ void DecToBinary (int n, char* binaryStr) {
    }
    // If the number was negative,apply two's complement
    if (isNegative) {
-      mBitLength = (i <= 7) ? 8 : 16;
-      for (int j = i; j < mBitLength; j++) binary[j] = 0;
+      mBitLength = (i <= 7) ? 8 : (i <= 8) ? 16 : 32;
       for (int j = 0; j < mBitLength; j++) binary[j] = 1 - binary[j]; // Invert the bits for 2's complement
       int carry = 1;
       for (int j = 0; j < mBitLength; j++) {
-         binary[j] = binary[j] + carry;
+         binary[j] += carry;
          if (binary[j] == 2) {
             binary[j] = 0;
             carry = 1;
@@ -43,13 +43,15 @@ void DecToBinary (int n, char* binaryStr) {
       mBitLength = (i <= 8) ? 8 : i;
       for (int j = i; j < mBitLength; j++) binary[j] = 0;
    }
+   int k;
    for (k = 0; k < mBitLength; k++) binaryStr[k] = binary[mBitLength - 1 - k] + '0';
    binaryStr[k] = '\0';
+   return binaryStr;
 }
 
-void DecToBinaryShiftOperator (int n, char* binaryString) {
-   int numBits = sizeof (int) * 8;
-   int isNegative = (n < 0); // Check if the number is negative
+char* DecToBinaryShiftOperator (int n) {
+   char binaryString[33] = {'0'};
+   int numBits = sizeof (int) * 8,isNegative = (n < 0); 
    mBitLength = (n >= -128 && n <= 127) ? 8 : 16;
    if (isNegative) n = ~(-n) + 1; // Compute two's complement
    unsigned int mask = 1 << (mBitLength - 1); // Create a mask to extract each bit
@@ -59,24 +61,26 @@ void DecToBinaryShiftOperator (int n, char* binaryString) {
       mask >>= 1;
    }
    binaryString[i] = '\0';
+   return binaryString;
 }
 
-void DecToHexa (int n, char* hexaStr) {
-   char hexa[32];
-   int i = 0, k, isNegative = 0;  // Flag to check if the number is negative
-   unsigned int num;
-   if (n < 0) {
-      num = (unsigned int)n;  // Handle negative numbers by using unsigned int
-      isNegative = 1;
-   }
-   else num = (unsigned int)n;
+char* DecToHexa (int n) {
+   char hexaStr[32] = { 0 };
+   int i = 0;
+   unsigned int num = (unsigned int)n;
    while (num > 0) {
       int rem = num % 16;
-      hexa[i++] = (rem < 10) ? rem + '0' : rem - 10 + 'A';
+      hexaStr[i++] = (rem < 10) ? rem + '0' : rem - 10 + 'A';
       num /= 16;
    }
    int requiredDigits = 2;
-   while (i < requiredDigits) hexa[i++] = '0';
-   for (k = 0; k < i; k++) hexaStr[k] = hexa[i - 1 - k];
-   hexaStr[k] = '\0';
+   while (i < requiredDigits) hexaStr[i++] = '0';
+   int j;
+   for (j = 0; j < i / 2; j++) {
+      char temp = hexaStr[j];
+      hexaStr[j] = hexaStr[i - 1 - j];
+      hexaStr[i - 1 - j] = temp;
+   }
+   hexaStr[i] = '\0';
+   return hexaStr;
 }

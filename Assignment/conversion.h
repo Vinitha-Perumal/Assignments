@@ -10,12 +10,12 @@
 #define CONVERSION_H
 
 /// <summary>Decimal number to binary Conversion</summary>
-void DecToBinary (int n, char* binaryStr);
+char* DecToBinary (int n);
 
 /// <summary>Decimal number to Binary Conversion using Shift Operator</summary>
-void DecToBinaryShiftOperator (int n, char* binaryString);
+char* DecToBinaryShiftOperator (int n);
 
 /// <summary>Decimal number to Hexadecimal Conversion</summary>
-void DecToHexa (int n, char* hexaStr);
+char* DecToHexa (int n);
 
 #endif
