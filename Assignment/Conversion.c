@@ -5,15 +5,14 @@
 // Conversion.c
 // Program for Number Conversion.
 // ------------------------------------------------------------------------------------------------
-
-#pragma warning(disable:4996)
+#include<stdio.h>
 #include "conversion.h"
 
 int mBitLength;
 
 char* DecToBinary (int n) {
-   int binary[32] = { 0 }, i = 0, isNegative = 0; // Flag is to check if the number is negative
-   char binaryStr[33];
+   int binary[32] = { 0 }, i = 0, isNegative = 0; // Flag is to check if the number is negative // 000000000000000000000000000000
+   char binaryStr[33] = { 0 };
    if (n < 0) {
       n = -n;
       isNegative = 1;
@@ -40,8 +39,10 @@ char* DecToBinary (int n) {
       }
    }
    else {
+      int j=0;
       mBitLength = (i <= 8) ? 8 : i;
-      for (int j = i; j < mBitLength; j++) binary[j] = 0;
+      for (int j = i; j < mBitLength; j++) 
+         binary[j] = 0;
    }
    int k;
    for (k = 0; k < mBitLength; k++) binaryStr[k] = binary[mBitLength - 1 - k] + '0';
@@ -83,4 +84,8 @@ char* DecToHexa (int n) {
    }
    hexaStr[i] = '\0';
    return hexaStr;
+}
+
+void DecToHexaBuiltInFunction (int n) {
+   printf ("Hexadecimal is: %X", n);
 }

@@ -5,7 +5,6 @@
 // conversion.h
 // Program for decimal conversion Header file.
 // ------------------------------------------------------------------------------------------------
-
 #ifndef CONVERSION_H
 #define CONVERSION_H
 
@@ -17,5 +16,8 @@ char* DecToBinaryShiftOperator (int n);
 
 /// <summary>Decimal number to Hexadecimal Conversion</summary>
 char* DecToHexa (int n);
+
+/// <summary>Decimal number to Hexadecimal Conversion using Built in Function</summary>
+void DecToHexaBuiltInFunction (int n);
 
 #endif
