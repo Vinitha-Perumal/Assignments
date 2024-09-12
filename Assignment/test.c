@@ -5,13 +5,12 @@
 // test.c
 // Program to test the decimal conversion.
 // ------------------------------------------------------------------------------------------------
-
+#pragma warning (disable:4996)
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h> 
 #include "conversion.h"
-#pragma warning (disable:4996)
 
 #define INVALID_INPUT "Invalid Input"
 // ANSI color code for green and red text
@@ -23,8 +22,7 @@ int IsValid (const char* n) {
    if (n == NULL || *n == '\0') return 0;
    char* endptr;
    long num = strtol (n, &endptr, 10);
-   if (*endptr != '\0') return 0;
-   if (num < INT_MIN || num > INT_MAX) return 0;
+   if (*endptr != '\0' || num < INT_MIN || num > INT_MAX) return 0;
    return 1;
 }
 
@@ -36,8 +34,9 @@ void PrintResult (const char* result) {
 
 void DecToBinaryTest () {
    char* input[] = { "0", "5", "255", "-255", "2147483647", "-2147483647", "*", "abc56" };
-   char* expected_output[] = { "00000000", "00000101", "11111111", "1111111100000001",
-                               "1111111111111111111111111111111", "10000000000000000000000000000001", "Invalid Input", "Invalid Input" };
+   char* expected_output[] = { "00000000", "00000101", "0000000011111111", "1111111100000001",
+                               "01111111111111111111111111111111", "10000000000000000000000000000001",
+                               "Invalid Input", "Invalid Input" };
    int testCount = sizeof (input) / sizeof (input[0]);
    printf ("---Decimal to Binary---\n\n");
    printf ("| %-12s | %-35s | %-40s | %-19s |\n", "Input", "Expected Output", "Actual Output", "Test Case Result");
@@ -52,11 +51,10 @@ void DecToBinaryTest () {
 
 void DecToHexaTest () {
    char* input2[] = { "0", "5", "255", "-255", "2147483647", "-2147483647", "*", "vini" };
-   char* expected_output[] = { "00", "05", "FF", "FFFFFF01",
-                               "7FFFFFFF", "80000001", 
-                               "Invalid Input", "Invalid Input" };
+   char* expected_output[] = { "00", "05", "00FF", "FF01","7FFFFFFF", "80000001","Invalid Input", 
+                               "Invalid Input" };
    int testCount = sizeof (input2) / sizeof (input2[0]);
-   printf ("---Decimal to Hexa---\n\n");
+   printf ("---Decimal to Hexadecimal---\n\n");
    printf ("| %-12s | %-20s | %-20s | %-20s |\n", "Input", "Expected Output", "Actual Output", "Test Case Result");
    printf ("|--------------|----------------------|----------------------|----------------------|\n");
    for (int i = 0; i < testCount; i++) {
@@ -67,17 +65,21 @@ void DecToHexaTest () {
 }
 
 void UserInput () {
-   int number;
+   long long number;
    char nextChar;
    while (1) {
       printf ("\nEnter a decimal number: ");
-      if (scanf_s ("%d%c", &number, &nextChar, 1) != 2 || nextChar != '\n') {
-         printf (RED_TEXT "\nInvalid input.Please enter a valid integer.\n" RESET_TEXT);
+      if (scanf_s ("%lld%c", &number, &nextChar, 1) != 2 || nextChar != '\n') {
+         printf (RED_TEXT "\nInvalid input. Please enter a valid integer.\n" RESET_TEXT);
          while (getchar () != '\n');
       }
       else {
-         printf ("\nBinary: %s\n", DecToBinary (number));
-         printf ("\nHexaDecimal: %s\n", DecToHexa (number));
+       // Check if the number is within 32-bit integer range
+         if (number > INT_MAX || number < INT_MIN) printf (RED_TEXT "\nNumber out of 32-bit range.\n" RESET_TEXT);
+         else {
+            int num = (int)number; // Cast to 32-bit integer
+            printf ("\nBinary: %s\nHexadecimal: %s\nHexadecimal(Inbuilt): %X\n ", DecToBinary (num), DecToHexa (num), num);
+         }
          break;
       }
    }
