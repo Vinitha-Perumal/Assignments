@@ -15,8 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Assignment.c">
+    <ClCompile Include="palindrome.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="palindrome_test.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="palindrome.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
