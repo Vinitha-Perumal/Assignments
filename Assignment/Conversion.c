@@ -8,27 +8,26 @@
 
 #include "conversion.h"
 
-char* DecToBinary (int n) {
-   static char binaryString[33] = { '0' };
+char* DecToBinary (int n, char* binaryStr) {
    int bitLength = (n >= -128 && n <= 127) ? 8 : (n >= -32768 && n <= 32767) ? 16 : 32;
    if (n < 0) n = ~(-n) + 1; // Compute two's complement
    unsigned int mask = 1 << (bitLength - 1); // Create a mask to extract each bit
-   int i;
+   int i = 0;
    for (i = 0; i < bitLength; i++) {
-      binaryString[i] = (n & mask) ? '1' : '0';
+      binaryStr[i] = (n & mask) ? '1' : '0';
       mask >>= 1;
    }
-   binaryString[bitLength] = '\0';
-   return binaryString;
+   binaryStr[bitLength] = '\0';
+   return binaryStr;
 }
 
-char* DecToHexa (int n) {
-   static char hexaStr[9] = { 0 };
+char* DecToHexa (int n, char* hexaStr) {
    int bitLength = (n >= -128 && n <= 127) ? 8 : (n >= -32768 && n <= 32767) ? 16 : 32;
    int hexDigits = (bitLength / 4);
    unsigned int num = (unsigned int)n;
-   for (int i = hexDigits - 1; i >= 0; i--) {
-      int hexDigitVal = (num >> (i * 4)) & 0xF;
+   int i = 0, hexDigitVal;
+   for (i = hexDigits - 1; i >= 0; i--) {
+      hexDigitVal = (num >> (i * 4)) & 0xF;
       hexaStr[hexDigits - 1 - i] = hexDigitVal + (hexDigitVal < 10 ? '0' : (-10 + 'A'));
    }
    hexaStr[hexDigits] = '\0';

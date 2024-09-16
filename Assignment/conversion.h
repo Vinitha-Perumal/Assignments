@@ -9,10 +9,10 @@
 #ifndef CONVERSION_H
 #define CONVERSION_H
 
-/// <summary>Decimal number to Binary Conversion</summary>
-char* DecToBinary (int n);
+/// <summary>Converts a decimal integer to its binary representation</summary>
+char* DecToBinary (int n, char* binaryStr);
 
-/// <summary>Decimal number to Hexadecimal Conversion</summary>
-char* DecToHexa (int n);
+/// <summary> Converts a decimal integer to its hexadecimal representation</summary>
+char* DecToHexa (int n, char* hexaStr);
 
 #endif
