@@ -21,7 +21,7 @@ void PalindromeTest () {
    int testCount = sizeof (input1) / sizeof (input1[0]);
    printf ("------Palindrome Check------\n");
    printf ("| %-30s | %-20s | %-20s | %-10s |\n", "Input", "Expected Output", "Actual Output", "Test Case Result");
-   printf ("---------------------------------|----------------------|----------------------|------------------\n");
+   printf ("|---------------------------------|----------------------|----------------------|------------------|\n");
    for (int i = 0; i < testCount; i++) {
       int actualOutput = PalindromeCheck (input1[i]);
       const char* actualRes = actualOutput ? "Palindrome" : "Not a Palindrome";
@@ -37,11 +37,10 @@ void ReverseNumPalindromeTest () {
    int testCount = sizeof (input2) / sizeof (input2[0]);
    printf ("------ReverseNumber Palindrome Check------\n");
    printf ("| %-30s | %-20s | %-20s | %-10s |\n", "Input", "Expected Output", "Actual Output", "Test Case Result");
-   printf ("---------------------------------|----------------------|----------------------|------------------|\n");
+   printf ("|---------------------------------|----------------------|----------------------|------------------|\n");
    for (int i = 0; i < testCount; i++) {
-      int reversed;
-      int actualOutput = reverseNumber (input2[i], &reversed);
-      const char* actualRes = actualOutput ? "Palindrome" : "Not a Palindrome";
+      int reversed = reverseNumber (input2[i]);
+      const char* actualRes = (input2[i] == reversed) ? "Palindrome" : "Not a Palindrome";
       const char* res = (strcmp (actualRes, expected_output2[i]) == 0) ? GREEN_TEXT "Pass" RESET_TEXT : RED_TEXT "Fail" RESET_TEXT;
       printf ("| %-30d | %-20s | %-20s | %-27s |\n", input2[i], expected_output2[i], actualRes, res);
    }
@@ -54,15 +53,13 @@ void UserInput () {
    printf ("\nEnter a word or phrase: ");
    if (fgets (input, sizeof (input), stdin)) {
       input[strcspn (input, "\n")] = '\0';    // Remove newline character if present
-      if (PalindromeCheck (input)) printf ("Palindrome\n");
-      else printf ("Not a Palindrome\n");
+      (PalindromeCheck (input)) ? printf ("Palindrome\n") : printf("Not a Palindrome\n");
    }
    printf ("\nEnter a number: ");
    scanf_s ("%d", &num);
-   int reversed = { 0 };
-   int isPalindrome = reverseNumber (num, &reversed);
+   int reversed = reverseNumber (num);
    printf ("Reversed Number: %d\n", reversed);
-   if (isPalindrome) printf ("Palindrome\n");
+   if (num == reversed) printf ("Palindrome\n");
    else printf ("Not a palindrome\n");
 }
 

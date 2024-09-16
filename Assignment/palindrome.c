@@ -27,12 +27,11 @@ int PalindromeCheck (char str[]) {
    return 1;
 }
 
-int reverseNumber (int num, int* reversed) {
-   *reversed = 0;
-   int original = num;
+int reverseNumber (int num) {
+   int reversed = 0;
    while (num > 0) {
-      *reversed = *reversed * 10 + num % 10;
+      reversed = reversed * 10 + num % 10;
       num /= 10;
    }
-   return original == *reversed ? 1 : 0;
+   return reversed;
 }

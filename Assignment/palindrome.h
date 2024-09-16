@@ -13,6 +13,6 @@
 int PalindromeCheck (char str[]);
 
 /// <summary>To reverse an integer number and check if it's a palindrome </summary>
-int reverseNumber (int num, int* reversed);
+int reverseNumber (int num);
 
 #endif
