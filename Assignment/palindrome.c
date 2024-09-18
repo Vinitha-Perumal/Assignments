@@ -8,30 +8,30 @@
 
 #include "palindrome.h"
 #include <ctype.h>
-#include <string.h>
 
 int PalindromeCheck (char str[]) {
-   int start = 0;
-   int end = (int)strlen (str) - 1;
-   while (start < end) {  // Ignore non-alphabet characters and convert to lowercase for comparison
-      if (!isalpha (str[start])) {
-         start++;
-         continue;
-      }
-      if (!isalpha (str[end])) {
-         end--;
-         continue;
-      }
-      if (tolower (str[start++]) != tolower (str[end--])) return 0;
-   }
+   char temp[100] = { 0 };
+   int len = 0;
+   for (int i = 0; str[i] != '\0'; i++)
+      if (isalpha (str[i])) temp[len++] = str[i];
+   temp[len] = '\0';
+   if (len == 0) return 0;
+   int start = 0, end = len - 1;
+   while (start < end)
+      if (tolower (temp[start++]) != tolower (temp[end--])) return 0;
    return 1;
 }
 
-int reverseNumber (int num) {
-   int reversed = 0;
-   while (num > 0) {
-      reversed = reversed * 10 + num % 10;
+int ReverseNumber (int num, int* reversed) {
+   *reversed = 0;
+   if (num >= 0 && num <= 9) {
+      *reversed = num;
+      return 1;
+   }
+   int original = num;
+   while (num != 0) {
+      *reversed = *reversed * 10 + num % 10;
       num /= 10;
    }
-   return reversed;
+   return original == *reversed ? 1 : 0;
 }
