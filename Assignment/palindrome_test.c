@@ -21,10 +21,11 @@
 #define RED_TEXT "\033[0;31m"
 #define RESET_TEXT "\033[0m"
 
+int IsValid (const char* str);
+void PrintRes (const char* input, const char* expectedOutput, int actualOutput);
 void PalindromeTest ();
 void ReverseNumPalindromeTest ();
 void UserInput ();
-int IsValid (const char* str);
 
 int IsValid (const char* str) {
    if (*str == '\0' || str == NULL) return 0;
@@ -36,38 +37,44 @@ int IsValid (const char* str) {
    return 1;
 }
 
+void PrintRes (const char* input, const char* expectedOutput, int actualOutput) {
+   const char* actualRes = actualOutput ? "Palindrome" : "Not a Palindrome";
+   const char* res = (strcmp (actualRes, expectedOutput) == 0) ? GREEN_TEXT "Pass" RESET_TEXT : RED_TEXT "Fail" RESET_TEXT;
+   printf ("| %-30s | %-20s | %-20s | %-27s |\n", input, expectedOutput, actualRes, res);
+}
+
 void PalindromeTest () {
    char* input1[] = { "vini", "I did,did I", "Ma*)d(*am", "Was it a car or a cat I saw?", "Hello", "Don't nod" };
-   char* expected_output[] = { "Not a Palindrome", "Palindrome", "Palindrome", "Palindrome", "Not a Palindrome", "Palindrome" };
+   char* expectedOutput1[] = { "Not a Palindrome", "Palindrome", "Palindrome", "Palindrome", "Not a Palindrome", "Palindrome" };
    int testCount = sizeof (input1) / sizeof (input1[0]);
-   printf ("------Palindrome Check------\n");
-   printf ("| %-30s | %-20s | %-20s | %-10s |\n", "Input", "Expected Output", "Actual Output", "Test Case Result");
-   printf ("|--------------------------------|----------------------|----------------------|------------------|\n");
+   printf ("------Palindrome Check------\n"
+           "| %-30s | %-20s | %-20s | %-10s |\n"
+           "|--------------------------------|----------------------|----------------------|------------------|\n",
+           "Input", "Expected Output", "Actual Output", "Test Case Result");
    for (int i = 0; i < testCount; i++) {
       int actualOutput = PalindromeCheck (input1[i]);
-      const char* actualRes = actualOutput ? "Palindrome" : "Not a Palindrome";
-      const char* res = (strcmp (actualRes, expected_output[i]) == 0) ? GREEN_TEXT "Pass" RESET_TEXT : RED_TEXT "Fail" RESET_TEXT;
-      printf ("| %-30s | %-20s | %-20s | %-27s |\n", input1[i], expected_output[i], actualRes, res);
+      PrintRes (input1[i], expectedOutput1[i], actualOutput);
    }
    printf ("\n\n");
 }
 
 void ReverseNumPalindromeTest () {
    char* input2[] = { "123", "4334", "654", "34543", "-121","*-23" ,"?@343", "6", " " };
-   char* expected_output2[] = { "Not a Palindrome", "Palindrome", "Not a Palindrome", "Palindrome", "Palindrome","Invalid Input","Invalid Input", "Palindrome", "Invalid Input" };
+   char* expectedOutput2[] = { "Not a Palindrome", "Palindrome", "Not a Palindrome", "Palindrome", "Not a Palindrome","Invalid Input","Invalid Input", "Palindrome", "Invalid Input" };
    int testCount = sizeof (input2) / sizeof (input2[0]);
-   printf ("------ReverseNumber Palindrome Check------\n");
-   printf ("| %-30s | %-20s | %-20s | %-10s |\n", "Input", "Expected Output", "Actual Output", "Test Case Result");
-   printf ("|--------------------------------|----------------------|----------------------|------------------|\n");
+   printf ("------ReverseNumber Palindrome Check------\n"
+           "| %-30s | %-20s | %-20s | %-10s |\n"
+           "|--------------------------------|----------------------|----------------------|------------------|\n",
+           "Input", "Expected Output", "Actual Output", "Test Case Result");
    for (int i = 0; i < testCount; i++) {
       if (!IsValid (input2[i])) {
-         printf ("| %-30s | %-20s | %-20s | %-27s |\n", input2[i], expected_output2[i], "Invalid Input", GREEN_TEXT "Pass" RESET_TEXT);
+         const char* actualRes = "Invalid Input";
+         const char* res = (strcmp (actualRes, expectedOutput2[i]) == 0) ? GREEN_TEXT "Pass" RESET_TEXT : RED_TEXT "Fail" RESET_TEXT;
+         printf ("| %-30s | %-20s | %-20s | %-27s |\n", input2[i], expectedOutput2[i], actualRes, res);
          continue;
       }
       int num = atoi (input2[i]), reversed = 0, actualOutput = ReverseNumber (num, &reversed);
-      const char* actualRes = actualOutput ? "Palindrome" : "Not a Palindrome";
-      const char* res = (strcmp (actualRes, expected_output2[i]) == 0) ? GREEN_TEXT "Pass" RESET_TEXT : RED_TEXT "Fail" RESET_TEXT;
-      printf ("| %-30s | %-20s | %-20s | %-27s |\n", input2[i], expected_output2[i], actualRes, res);
+      PrintRes (input2[i], expectedOutput2[i], actualOutput);
    }
    printf ("\n\n");
 }
@@ -77,7 +84,7 @@ void UserInput () {
    printf ("\nEnter a word or phrase: ");
    if (fgets (input, sizeof (input), stdin)) {
       input[strcspn (input, "\n")] = '\0'; // Remove newline character if present
-      printf (PalindromeCheck (input) ? "Palindrome\n" : "Not a Palindrome\n");
+      input[0] == '\0' ? printf ("Empty String\n") : printf (PalindromeCheck (input) ? "Palindrome\n" : "Not a Palindrome\n");
    }
    printf ("\nEnter a number: ");
    if (fgets (numStr, sizeof (numStr), stdin)) {
@@ -89,11 +96,8 @@ void UserInput () {
       else if (errno == ERANGE || num > INT_MAX || num < INT_MIN) printf (RED_TEXT "Overflow: The number is out of the valid range.\n" RESET_TEXT);
       else {
          int reversed = 0, isPalindrome = ReverseNumber ((int)num, &reversed);
-         if (reversed > INT_MAX || reversed < 0) printf ("Overflow\n");
-         else {
-            printf ("Reversed Number: %d\n", reversed);
-            printf (isPalindrome ? "Palindrome\n" : "Not a Palindrome\n");
-         }
+         if (num < 0) printf ("Not a Palindrome\n");
+         else reversed > INT_MAX || reversed < 0 ? printf ("Overflow\n") : printf ("Reversed Number : %d\n%s\n", reversed, isPalindrome ? "Palindrome\n" : "Not a Palindrome\n");
       }
    }
 }
