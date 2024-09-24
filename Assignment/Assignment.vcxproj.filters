@@ -15,15 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="palindrome.c">
+    <ClCompile Include="Palindrome.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="palindrome_test.c">
+    <ClCompile Include="Palindrome_test.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="palindrome.h">
+    <ClInclude Include="Palindrome.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

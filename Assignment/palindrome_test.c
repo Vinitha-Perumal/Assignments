@@ -2,12 +2,11 @@
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
-// palindrome_test.c
+// Palindrome_test.c
 // Program to test the decimal conversion.
 // ------------------------------------------------------------------------------------------------
-
 #pragma warning (disable:4996)
-#include "palindrome.h"
+#include "Palindrome.h"
 #include <stdio.h>
 #include <string.h> 
 #include <limits.h>
@@ -51,8 +50,9 @@ void PalindromeTest () {
            "| %-30s | %-20s | %-20s | %-10s |\n"
            "|--------------------------------|----------------------|----------------------|------------------|\n",
            "Input", "Expected Output", "Actual Output", "Test Case Result");
-   for (int i = 0; i < testCount; i++) {
-      int actualOutput = PalindromeCheck (input1[i]);
+   int i = 0, actualOutput;
+   for (i = 0; i < testCount; i++) {
+      actualOutput = PalindromeCheck (input1[i]);
       PrintRes (input1[i], expectedOutput1[i], actualOutput);
    }
    printf ("\n\n");
@@ -66,14 +66,15 @@ void ReverseNumPalindromeTest () {
            "| %-30s | %-20s | %-20s | %-10s |\n"
            "|--------------------------------|----------------------|----------------------|------------------|\n",
            "Input", "Expected Output", "Actual Output", "Test Case Result");
-   for (int i = 0; i < testCount; i++) {
+   int i = 0, num, reversed = 0, actualOutput;
+   for (i = 0; i < testCount; i++) {
       if (!IsValid (input2[i])) {
          const char* actualRes = "Invalid Input";
          const char* res = (strcmp (actualRes, expectedOutput2[i]) == 0) ? GREEN_TEXT "Pass" RESET_TEXT : RED_TEXT "Fail" RESET_TEXT;
          printf ("| %-30s | %-20s | %-20s | %-27s |\n", input2[i], expectedOutput2[i], actualRes, res);
          continue;
       }
-      int num = atoi (input2[i]), reversed = 0, actualOutput = ReverseNumber (num, &reversed);
+      num = atoi (input2[i]), actualOutput = ReverseNumber (num, &reversed);
       PrintRes (input2[i], expectedOutput2[i], actualOutput);
    }
    printf ("\n\n");
@@ -92,12 +93,12 @@ void UserInput () {
       char* endPtr;
       errno = 0;  // Clear errno before conversion
       long num = strtol (numStr, &endPtr, 10);
+      int reversed = 0, isPalindrome;
       if (endPtr == numStr || *endPtr != '\0') printf ("Invalid input!\n");
       else if (errno == ERANGE || num > INT_MAX || num < INT_MIN) printf (RED_TEXT "Overflow: The number is out of the valid range.\n" RESET_TEXT);
       else {
-         int reversed = 0, isPalindrome = ReverseNumber ((int)num, &reversed);
-         if (num < 0) printf ("Not a Palindrome\n");
-         else reversed > INT_MAX || reversed < 0 ? printf ("Overflow\n") : printf ("Reversed Number : %d\n%s\n", reversed, isPalindrome ? "Palindrome\n" : "Not a Palindrome\n");
+         isPalindrome = ReverseNumber ((int)num, &reversed);
+         printf (num < 0 ? "Not a Palindrome\n" : (reversed > INT_MAX || reversed < 0) ? "Overflow\n" : "Reversed Number : %d\n%s\n", reversed, isPalindrome ? "Palindrome\n" : "Not a Palindrome\n");
       }
    }
 }

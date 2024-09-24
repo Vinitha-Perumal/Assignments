@@ -2,10 +2,9 @@
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
 // -------------------------------------------------------------------
-// palindrome.h
+// Palindrome.h
 // Program for decimal conversion Header file.
 // ------------------------------------------------------------------------------------------------
-
 #ifndef PALINDROME_H
 #define PALINDROME_H
 
