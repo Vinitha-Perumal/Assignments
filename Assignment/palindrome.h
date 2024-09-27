@@ -9,9 +9,9 @@
 #define PALINDROME_H
 
 /// <summary>To check if a phrase or word is a palindrome</summary>
-int PalindromeCheck (char str[]);
+int PalindromeCheck (const char str[]);
 
-/// <summary>To reverse an integer number and check if it's a palindrome </summary>
+/// <summary>To reverse an integer number and check if it's a palindrome</summary>
 int ReverseNumber (int num, int* reversed);
 
 #endif
