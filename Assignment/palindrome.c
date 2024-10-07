@@ -24,16 +24,14 @@ int PalindromeCheck (const char str[]) { // Returns 1 for Palindrome, Returns 0 
       validChar = 1;
       if (tolower (str[start++]) != tolower (str[end--])) return 0;
    }
-   if (!validChar) return -1;
-   return validChar;
+   return !validChar ? -1 : validChar;
 }
 
-int ReverseNumber (int num, int* reversed) {
-   if (num < 0 || (num <= 9 && (*reversed = num))) return num >= 0;
+void ReverseNumber (int num, int* reversed) {
+   if (num < 0 || (num <= 9 && (*reversed = num))) return;
    int temp = num;
    while (temp != 0) {
       *reversed = *reversed * 10 + temp % 10;
       temp /= 10;
    }
-   return num == *reversed ? 1 : 0;
 }

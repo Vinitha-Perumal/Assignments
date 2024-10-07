@@ -12,6 +12,6 @@
 int PalindromeCheck (const char str[]);
 
 /// <summary>To reverse an integer number and check if it's a palindrome</summary>
-int ReverseNumber (int num, int* reversed);
+void ReverseNumber (int num, int* reversed);
 
 #endif

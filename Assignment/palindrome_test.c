@@ -21,7 +21,6 @@
 #define RESET_TEXT "\033[0m"
 
 int IsValid (const char* num);
-void PrintRes (const char* inputs, const char* expOutputs, const char* actualRes, const char* res);
 void TestCases ();
 void UserInput ();
 
@@ -36,18 +35,14 @@ int IsValid (const char* num) {
    return 1;
 }
 
-void PrintRes (const char* inputs, const char* expOutputs, const char* actualRes, const char* res) { // Print the result
-   printf ("| %-30s | %-20s | %-20s | %-27s |\n", inputs, expOutputs, actualRes, res);
-}
-
 void TestCases () {
    char* inputs[] = { "vini", "I did,did I", "Ma*)d(*am", "@@@##!!!", "Mam!",
                       "Was it a car or a cat I saw?", "Don't nod", "Hello",
-                      "4334", "654", "34543", "-121", "*-23" ,"?@343", "6", " " };
-   char* expOutputs[] = { "Not a Palindrome", "Palindrome", "Palindrome", "Invalid Input",
-                          "Palindrome", "Palindrome", "Palindrome", "Not a Palindrome",
-                          "Palindrome", "Not a Palindrome", "Palindrome", "Not a Palindrome",
-                          "Invalid Input", "Invalid Input", "Palindrome", "Invalid Input" };
+                      "4334", "2147447412", "34543", "-121", "*-23" ,"?@343", "6", " " },
+      * expOutputs[] = { "Not a Palindrome", "Palindrome", "Palindrome", "Invalid Input",
+                             "Palindrome", "Palindrome", "Palindrome", "Not a Palindrome",
+                             "Palindrome", "Palindrome", "Palindrome", "Not a Palindrome",
+                             "Invalid Input", "Invalid Input", "Palindrome", "Invalid Input" };
    int numOfTestCases = sizeof (inputs) / sizeof (inputs[0]);
    printf ("\n-------Testcases for String and Integer Input------\n\n"
            "| %-30s | %-20s | %-20s | %-10s |\n"
@@ -55,22 +50,14 @@ void TestCases () {
            "----------------------|------------------|\n",
            "Input", "Expected Output", "Actual Output", "Test Case Result");
    for (int i = 0; i < numOfTestCases; i++) {
-      int actualOutput;
-      const char* actualRes;
-      if (IsValid (inputs[i])) {
-         int num = atoi (inputs[i]);
-         int reversed = 0;
-         actualOutput = ReverseNumber (num, &reversed);
-         actualRes = actualOutput == 1 ? "Palindrome" : "Not a Palindrome";
-      }
-      else {
-         actualOutput = PalindromeCheck (inputs[i]);
-         actualRes = actualOutput == 1 ? "Palindrome"
-            : actualOutput == 0 ? "Not a Palindrome" : "Invalid Input";
-      }
-      const char* res = (strcmp (actualRes, expOutputs[i]) == 0) ?
+      int actualOutput, reversed = 0;
+      actualOutput = IsValid (inputs[i]) ? ReverseNumber (atoi (inputs[i]), &reversed),
+         (atoi (inputs[i]) == reversed) : PalindromeCheck (inputs[i]);
+      const char* actualRes = actualOutput == 1 ? "Palindrome"
+         : actualOutput == 0 ? "Not a Palindrome" : "Invalid Input",
+         * res = (strcmp (actualRes, expOutputs[i]) == 0) ?
          GREEN_TEXT "Pass" RESET_TEXT : RED_TEXT "Fail" RESET_TEXT;
-      PrintRes (inputs[i], expOutputs[i], actualRes, res);
+      printf ("| %-30s | %-20s | %-20s | %-27s |\n", inputs[i], expOutputs[i], actualRes, res);
    }
    printf ("\n\n");
 }
@@ -88,11 +75,12 @@ void UserInput () {
       else if (errno == ERANGE || num > INT_MAX || num < INT_MIN)
          printf (RED_TEXT "Overflow: The number is out of the valid range.\n" RESET_TEXT);
       else {
-         int reversed = 0, isPalindrome = ReverseNumber ((int)num, &reversed);
-         printf (num < 0 ? "Not a Palindrome\n"
-                 : (reversed > INT_MAX || reversed < 0) ? "Overflow\n"
-                 : "Reversed Number : %d\n%s\n", reversed,
-                 isPalindrome ? "Palindrome\n" : "Not a Palindrome\n");
+         int reversed = 0;
+         ReverseNumber ((int)num, &reversed);
+         printf ("Reversed Number: %d\n%s\n", reversed,
+                 (num < 0) ? "Not a Palindrome"
+                 : ((reversed > INT_MAX || reversed < 0) ? "Overflow"
+                    : (num == reversed ? "Palindrome" : "Not a Palindrome")));
       }
    }
    else {
