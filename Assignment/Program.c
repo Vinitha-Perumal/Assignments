@@ -10,5 +10,5 @@
 #include "Program.h"
 
 void PrintHelloWorld () {
-	printf ("Hello, World\n");
+   printf ("Hello, World\n");
 }
