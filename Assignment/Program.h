@@ -1,13 +1,15 @@
 // ------------------------------------------------------------------------------------------------
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
+// Vinitha Perumal - GET
 // ------------------------------------------------------------------
-// Assignment.c
+// Program.h
 // Program on main branch.
 // ------------------------------------------------------------------------------------------------
-#include <stdio.h>
+#ifndef PROGRAM_H
+#define PROGRAM_H
 
-int main () {
-	printf ("Hello, world\n");
-	return 0;
-}
+/// <summary>To Print Hello World</summary>
+void PrintHelloWorld ();
+
+#endif
