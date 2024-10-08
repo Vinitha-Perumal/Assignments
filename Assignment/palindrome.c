@@ -27,11 +27,12 @@ int PalindromeCheck (const char str[]) { // Returns 1 for Palindrome, Returns 0 
    return !validChar ? -1 : validChar;
 }
 
-void ReverseNumber (int num, int* reversed) {
-   if (num < 0 || (num <= 9 && (*reversed = num))) return;
+int ReverseNumber (int num, int* reversed) {
+   if (num < 0 || (num <= 9 && (*reversed = num))) return num;
    int temp = num;
    while (temp != 0) {
       *reversed = *reversed * 10 + temp % 10;
       temp /= 10;
    }
+   return *reversed;
 }

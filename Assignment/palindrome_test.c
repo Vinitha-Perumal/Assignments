@@ -50,14 +50,15 @@ void TestCases () {
            "----------------------|------------------|\n",
            "Input", "Expected Output", "Actual Output", "Test Case Result");
    for (int i = 0; i < numOfTestCases; i++) {
-      int actualOutput, reversed = 0;
-      actualOutput = IsValid (inputs[i]) ? ReverseNumber (atoi (inputs[i]), &reversed),
-         (atoi (inputs[i]) == reversed) : PalindromeCheck (inputs[i]);
+      int actualOutput, reversed = 0, num = atoi (inputs[i]);
+      char* input = inputs[i];
+      actualOutput = IsValid (input) ? ReverseNumber (num, &reversed),
+         (num == reversed) : PalindromeCheck (input);
       const char* actualRes = actualOutput == 1 ? "Palindrome"
          : actualOutput == 0 ? "Not a Palindrome" : "Invalid Input",
          * res = (strcmp (actualRes, expOutputs[i]) == 0) ?
          GREEN_TEXT "Pass" RESET_TEXT : RED_TEXT "Fail" RESET_TEXT;
-      printf ("| %-30s | %-20s | %-20s | %-27s |\n", inputs[i], expOutputs[i], actualRes, res);
+      printf ("| %-30s | %-20s | %-20s | %-27s |\n", input, expOutputs[i], actualRes, res);
    }
    printf ("\n\n");
 }
