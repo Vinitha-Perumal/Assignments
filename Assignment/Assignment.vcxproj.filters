@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Assignment.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Program.c">
       <Filter>Source Files</Filter>
     </ClCompile>
