@@ -35,9 +35,8 @@ void TestCases () {
    int numOfTestCases = (int)sizeof (input) / sizeof (input[0]),
       size = (int)sizeof (input[0]) / sizeof (input[0][0]);
    printf ("\n\t\t\t\tTestcases for Insertion Sort\n\n"
-           "\tInput\t\t\t\tOutput\t\t\tTest Case Result\n"
-           " |--------------------------|--------------------------|"
-           "---------------------------|\n");
+           "\tInput\t\t\t\tOutput\t\t\tTest Case Result\n |--------------------------|"
+           "--------------------------|---------------------------|\n");
    for (int i = 0; i < numOfTestCases; i++) {
       int actualOutput[6] = { 0 };
       for (int j = 0; j < size; j++) actualOutput[j] = input[i][j];
@@ -53,20 +52,19 @@ void TestCases () {
       printf ("%*s%20s%*s   |\n", padding, "", result, padding, "");
    }
    printf ("\n\t\t\t\tTest Cases for Binary Search\n\n"
-           "\tInput\t\t\t\tOutput\t\t  Key\t\tResult\n"
-           " |--------------------------|--------------------------|------|-----------------|\n");
+           "\tInput\t\t\t\tOutput\t\t  Key\t\tResult\n |--------------------------|"
+           "--------------------------|------|-----------------------|\n");
    for (int i = 0; i < numOfTestCases; i++) {
       printf (" | ");
       for (int j = 0; j < size; j++) printf ("%-3d ", input[i][j]);
       printf (" | ");
       for (int j = 0; j < size; j++) printf ("%-3d ", expOutput[i][j]);
       int Keys[] = { 3, 25, -1, 65, 3, -10 };
-      printf (" | %-3d ", Keys[i]);
-      printf (" | ");
+      printf (" | %-3d  | ", Keys[i]);
       int foundIndex = BinarySearch (expOutput[i], size, Keys[i]);
-      const char* res = (foundIndex != -1) ? GREEN_TEXT "Found" RESET_TEXT
-         : RED_TEXT "Not Found" RESET_TEXT;
-      printf ("%26s |\n", res);
+      printf (foundIndex != -1 ? GREEN_TEXT "Element %2d found at %d" RESET_TEXT
+              : RED_TEXT "Element %3d Not Found" RESET_TEXT, Keys[i], foundIndex);
+      printf (" |\n");
    }
 }
 
@@ -78,7 +76,7 @@ void UserInput () {
       fgets (buffer, sizeof (buffer), stdin);
       n = strtol (buffer, &endptr, 10);
       // Check for valid input
-      if (endptr != buffer && *endptr == '\n' && n > 0 && n <= 100) break; // Valid input, exit loop
+      if (endptr != buffer && *endptr == '\n' && n > 0 && n <= 100) break; // Valid input,exit loop
    }
    for (int i = 0; i < n; i++) {
       printf ("Enter element %d: ", i + 1);
@@ -93,15 +91,26 @@ void UserInput () {
    printf ("Sorted array: ");
    for (int i = 0; i < n; i++) printf ("%d ", arr[i]);
    printf ("\n");
-   int key;
    while (1) {
-      printf ("Enter element to search: ");
-      fgets (buffer, sizeof (buffer), stdin);
-      key = strtol (buffer, &endptr, 10);
-      if (endptr != buffer && *endptr == '\n') break; // Valid input, exit loop
+      char searchChoice;
+      printf ("Do you want Search (y|n)? : ");
+      searchChoice = _getch ();
+      printf ("%c\n", searchChoice);
+      if (searchChoice == 'y' || searchChoice == 'Y') {
+         printf ("Enter element to search: ");
+         fgets (buffer, sizeof (buffer), stdin);
+         int key = strtol (buffer, &endptr, 10);
+         if (endptr != buffer && *endptr == '\n') {
+            int res = BinarySearch (arr, n, key);
+            printf ((res != -1) ? "Element %d found at index %d\n"
+                    : "Element %d is not found\n", key, res);
+            break;
+         }
+         else printf (RED_TEXT "Invalid Input,enter valid number\n" RESET_TEXT);
+      }
+      else if (searchChoice == 'n' || searchChoice == 'N') break;
+      else printf (RED_TEXT "Invalid choice, please enter valid choice \n" RESET_TEXT);
    }
-   int res = BinarySearch (arr, n, key);
-   printf ((res != -1) ? "Element %d found at index %d\n" : "Element %d is not found\n", key, res);
 }
 
 int main () {
@@ -111,6 +120,7 @@ int main () {
               "Enter your choice (1 or 2 or 3) : ");
       choice = _getch ();
       printf ("%c\n", choice);
+      system ("cls");
       if (choice == '1' || choice == '2' || choice == '3') {
          switch (choice) {
             case '1':
