@@ -3,7 +3,6 @@
 // Copyright (c) Metamation India.
 // -------------------------------------------------------------------
 // Palindrome.h
-// Program for decimal conversion Header file.
 // ------------------------------------------------------------------------------------------------
 #ifndef PALINDROME_H
 #define PALINDROME_H
