@@ -3,7 +3,6 @@
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
 // Palindrome_test.c
-// Program to test the decimal conversion.
 // ------------------------------------------------------------------------------------------------
 #pragma warning (disable:4996)
 #include "Palindrome.h"
@@ -45,20 +44,24 @@ void TestCases () {
                              "Invalid Input", "Invalid Input", "Palindrome", "Invalid Input" };
    int numOfTestCases = sizeof (inputs) / sizeof (inputs[0]);
    printf ("\n-------Testcases for String and Integer Input------\n\n"
-           "| %-30s | %-20s | %-20s | %-10s |\n"
-           "|--------------------------------|----------------------|"
-           "----------------------|------------------|\n",
-           "Input", "Expected Output", "Actual Output", "Test Case Result");
+           "| %-30s | %-30s | %-20s | %-20s | %-10s |\n"
+           "|--------------------------------|--------------------------------|"
+           "----------------------|----------------------|------------------|\n",
+           "Input", "Reverse", "Expected Output", "Actual Output", "Test Case Result");
    for (int i = 0; i < numOfTestCases; i++) {
-      int actualOutput, reversed = 0, num = atoi (inputs[i]);
       char* input = inputs[i];
-      actualOutput = IsValid (input) ? ReverseNumber (num, &reversed),
-         (num == reversed) : PalindromeCheck (input);
-      const char* actualRes = actualOutput == 1 ? "Palindrome"
-         : actualOutput == 0 ? "Not a Palindrome" : "Invalid Input",
-         * res = (strcmp (actualRes, expOutputs[i]) == 0) ?
+      char reversedInput[100] = { 0 };
+      int len = strlen (input), reversed = 0, num = atoi (inputs[i]),
+         actualOutput = IsValid (input) ? ReverseNumber (num, &reversed), (num == reversed ? 1 : 0)
+         : PalindromeCheck (input);
+      for (int j = 0; j < len; j++) reversedInput[j] = input[len - j - 1];
+      reversedInput[len] = '\0';
+      const char* isPal = actualOutput == 1 ? "Palindrome" : !actualOutput ?
+         "Not a Palindrome" : "Invalid Input",
+         * res = strcmp (isPal, expOutputs[i]) == 0 ?
          GREEN_TEXT "Pass" RESET_TEXT : RED_TEXT "Fail" RESET_TEXT;
-      printf ("| %-30s | %-20s | %-20s | %-27s |\n", input, expOutputs[i], actualRes, res);
+      printf ("| %-30s | %-30s | %-20s | %-20s | %-27s |\n", input, reversedInput, expOutputs[i],
+              isPal, res);
    }
    printf ("\n\n");
 }
@@ -76,12 +79,13 @@ void UserInput () {
       else if (errno == ERANGE || num > INT_MAX || num < INT_MIN)
          printf (RED_TEXT "Overflow: The number is out of the valid range.\n" RESET_TEXT);
       else {
-         int reversed = 0;
-         ReverseNumber ((int)num, &reversed);
-         printf ("Reversed Number: %d\n%s\n", reversed,
-                 (num < 0) ? "Not a Palindrome"
-                 : ((reversed > INT_MAX || reversed < 0) ? "Overflow"
-                    : (num == reversed ? "Palindrome" : "Not a Palindrome")));
+         if (num < 0) printf ("Not a Palindrome\n");
+         else {
+            int reversed = 0;
+            ReverseNumber ((int)num, &reversed);
+            printf ("Reversed Number: %d\n%s\n", reversed, ((reversed > INT_MAX || reversed < 0)
+                     ? "Overflow" : (num == reversed) ? "Palindrome" : "Not a Palindrome"));
+         }
       }
    }
    else {
@@ -97,26 +101,27 @@ int main () {
    while (1) {
       printf ("\n1. Test Cases\n2. User Input\n3. Exit the program\n"
               "Enter your choice (1 or 2 or 3) : ");
-      if (fgets (buffer, sizeof (buffer), stdin) != NULL) {
-         char* endptr;
-         choice = strtol (buffer, &endptr, 10);
-         if (*endptr == '\0' || *endptr == '\n') {
-            switch (choice) {
-               case 1:
-                  TestCases ();
-                  break;
-               case 2:
-                  UserInput ();
-                  break;
-               case 3:
-                  printf ("Exiting the program\n");
-                  return 0;
-               default:
-                  printf (RED_TEXT "Invalid choice. again choose 1, 2 or 3.\n" RESET_TEXT);
-                  break;
-            }
-         }
-         else printf (RED_TEXT "Invalid choice. again choose 1, 2 or 3.\n" RESET_TEXT);
+      if (fgets (buffer, sizeof (buffer), stdin) == NULL) continue;
+      char* endptr;
+      choice = strtol (buffer, &endptr, 10);
+      if (*endptr != '\0' && *endptr != '\n')
+      {
+         printf (RED_TEXT "Invalid choice. again choose 1, 2 or 3.\n" RESET_TEXT);
+         continue;
+      }
+      switch (choice) {
+         case 1:
+            TestCases ();
+            break;
+         case 2:
+            UserInput ();
+            break;
+         case 3:
+            printf ("Exiting the program\n");
+            return 0;
+         default:
+            printf (RED_TEXT "Invalid choice. again choose 1, 2 or 3.\n" RESET_TEXT);
+            break;
       }
    }
    return 0;
