@@ -19,12 +19,12 @@
 #define RED_TEXT "\033[0;31m"
 #define RESET_TEXT "\033[0m"
 
-int IsValid (const char* num);
+int IsValidNum (const char* num);
 void TestCases ();
 void UserInput ();
 
 /// <summary>To check if the input number is valid</summary>
-int IsValid (const char* num) {
+int IsValidNum (const char* num) {
    if (*num == '\0' || num == NULL) return 0;
    if (*num == '-') num++;
    while (*num) {
@@ -52,13 +52,13 @@ void TestCases () {
       char* input = inputs[i];
       char reversedInput[100] = { 0 };
       int len = strlen (input), reversed = 0, num = atoi (inputs[i]),
-         actualOutput = IsValid (input) ? ReverseNumber (num, &reversed), (num == reversed ? 1 : 0)
-         : PalindromeCheck (input);
+         actualOutput = IsValidNum (input) ? ReverseNumber (num, &reversed), num == reversed :
+         PalindromeCheck (input);
       for (int j = 0; j < len; j++) reversedInput[j] = input[len - j - 1];
       reversedInput[len] = '\0';
-      const char* isPal = actualOutput == 1 ? "Palindrome" : !actualOutput ?
-         "Not a Palindrome" : "Invalid Input",
-         * res = strcmp (isPal, expOutputs[i]) == 0 ?
+      const char* isPal = actualOutput == -1 ? "Invalid Input"
+         : actualOutput ? "Palindrome" : "Not a Palindrome",
+         * res = !strcmp (isPal, expOutputs[i]) ?
          GREEN_TEXT "Pass" RESET_TEXT : RED_TEXT "Fail" RESET_TEXT;
       printf ("| %-30s | %-30s | %-20s | %-20s | %-27s |\n", input, reversedInput, expOutputs[i],
               isPal, res);
@@ -71,7 +71,7 @@ void UserInput () {
    printf ("\nEnter a word or number: ");
    fgets (input, sizeof (input), stdin);
    input[strcspn (input, "\n")] = '\0';
-   if (IsValid (input)) {
+   if (IsValidNum (input)) {
       char* endPtr;
       errno = 0;
       long num = strtol (input, &endPtr, 10);
@@ -83,15 +83,14 @@ void UserInput () {
          else {
             int reversed = 0;
             ReverseNumber ((int)num, &reversed);
-            printf ("Reversed Number: %d\n%s\n", reversed, ((reversed > INT_MAX || reversed < 0)
-                     ? "Overflow" : (num == reversed) ? "Palindrome" : "Not a Palindrome"));
+            printf ("Reversed Number: %d\n%s\n", reversed, reversed > INT_MAX ? "Overflow"
+                    : num == reversed ? "Palindrome" : "Not a Palindrome");
          }
       }
    }
    else {
       int res = PalindromeCheck (input);
-      printf (res == -1 ? "Invalid Input\n"
-              : res == 0 ? "Not a Palindrome\n" : "Palindrome\n");
+      printf (res == -1 ? "Invalid Input\n" : res ? "Palindrome\n" : "Not a Palindrome\n");
    }
 }
 
@@ -104,8 +103,7 @@ int main () {
       if (fgets (buffer, sizeof (buffer), stdin) == NULL) continue;
       char* endptr;
       choice = strtol (buffer, &endptr, 10);
-      if (*endptr != '\0' && *endptr != '\n')
-      {
+      if (*endptr != '\0' && *endptr != '\n') {
          printf (RED_TEXT "Invalid choice. again choose 1, 2 or 3.\n" RESET_TEXT);
          continue;
       }

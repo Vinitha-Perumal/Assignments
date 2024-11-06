@@ -10,7 +10,8 @@
 
 int PalindromeCheck (const char str[]) {
    int start = 0, end = (int)strlen (str) - 1, validChar = 0;
-   while (start < end) {  // Ignore non-alphabet characters and convert to lowercase for comparison
+   while (start < end) {
+      // Ignore non-alphabet characters and convert to lowercase for comparison
       if (!isalpha (str[start])) {
          start++;
          continue;
@@ -28,10 +29,9 @@ int PalindromeCheck (const char str[]) {
 int ReverseNumber (int num, int* reversed) {
    if (num < 0) num = -num;
    *reversed = 0;
-   int temp = num;
-   while (temp != 0) {
-      *reversed = *reversed * 10 + temp % 10;
-      temp /= 10;
+   while (num != 0) {
+      *reversed = *reversed * 10 + num % 10;
+      num /= 10;
    }
    return 1;
 }
