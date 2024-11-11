@@ -8,6 +8,7 @@
 // ------------------------------------------------------------------------------------------------
 #include <stdio.h>
 #include <stdlib.h>
+#include <malloc.h>
 #include <conio.h>
 #include <string.h>
 #include "Program.h"
@@ -20,6 +21,13 @@
 int CompareArr (int arr1[], int arr2[], int size);
 void TestCases ();
 void UserInput ();
+void PrintTable (int* arr, int arrSize, int columns);
+
+void PrintTable (int* arr, int arrSize, int columns) {
+   printf (" | ");
+   for (int j = 0; j < arrSize; j++) printf ("%3d ", arr[j]);
+   for (int j = columns - arrSize; j > 0; j--) printf ("%-3s ", "");
+}
 
 int CompareArr (int arr1[], int arr2[], int size) {
    for (int i = 0; i < size; i++) if (arr1[i] != arr2[i]) return 0;
@@ -27,17 +35,16 @@ int CompareArr (int arr1[], int arr2[], int size) {
 }
 
 void TestCases () {
-   int* input[] = { (int[]) { 12, 2, 34, 22, 13 }, (int[]) { 6, 23, 20, 12 }, 
-                    (int[]) { 6, 5, 4, 3, 2, 1 }, (int[]) { 3, 5, 65 }, 
+   int* input[] = { (int[]) { 12, 2, 34, 22, 13 }, (int[]) { 6, 23, 20, 12 },
+                    (int[]) { 6, 5, 4, 3, 2, 1 }, (int[]) { 3, 5, 65 },
                     (int[]) { 3, 3, 3, 3, 3, 3 }, (int[]) { -2, -5, -10, 10, -3, -5 } },
-    * expOutput[] = { (int[]) { 2, 12, 13, 22, 34 }, (int[]) { 6, 12, 20, 23 }, 
-                     (int[]) { 1, 2, 3, 4, 5, 6 }, (int[]) { 3, 5, 65 }, (int[]) { 3, 3, 3, 3, 3, 3 },
-                     (int[]) { -10, -5, -5, -3, -2, 10 } };
-   int numOfTestCases = (int)sizeof (input) / sizeof (input[0]);
-   int size[] = { 5, 4, 6, 3, 6, 6 };
+     * expOutput[] = { (int[]) { 2, 12, 13, 22, 34 }, (int[]) { 6, 12, 20, 23 },
+                       (int[]) { 1, 2, 3, 4, 5, 6 }, (int[]) { 3, 5, 65 },
+                       (int[]) { 3, 3, 3, 3, 3, 3 }, (int[]) { -10, -5, -5, -3, -2, 10 } };
+   int numOfTestCases = (int)sizeof (input) / sizeof (input[0]), size[] = { 5, 4, 6, 3, 6, 6 };
    printf ("\n\t\t\t\tTestcases for Insertion Sort\n\n"
            "\tInput\t\t\t\tOutput\t\t\tTest Case Result\n |--------------------------|"
-           "--------------------------|---------------------------|\n");
+           "--------------------------|--------------------------|\n");
    for (int i = 0; i < numOfTestCases; i++) {
       int* actualOutput = malloc (size[i] * sizeof (int));
       if (actualOutput == NULL) {
@@ -46,17 +53,12 @@ void TestCases () {
       }
       for (int j = 0; j < size[i]; j++) actualOutput[j] = input[i][j];
       InsertionSort (actualOutput, size[i]);
-      printf (" | ");
-      for (int j = 0; j < size[i]; j++) printf ("%3d ", input[i][j]);
-      for (int j = 6 - size[i]; j > 0; j--) printf ("%-3s ", "");
-      printf (" | ");
-      for (int j = 0; j < size[i]; j++) printf ("%3d ", expOutput[i][j]);
-      for (int j = 6 - size[i]; j > 0; j--) printf ("%-3s ", "");
-      printf (" | ");
+      PrintTable (input[i], size[i], 6);
+      PrintTable (expOutput[i], size[i], 6);
       const char* result = CompareArr (actualOutput, expOutput[i], size[i]) ?
          GREEN_TEXT "Pass" RESET_TEXT : RED_TEXT "fail" RESET_TEXT;
       int padding = (30 - strlen (result)) / 2; // Calculate left padding
-      printf ("%*s%20s%*s   |\n", padding, "", result, padding, "");
+      printf (" |%*s%20s%*s   |\n", padding, "", result, padding, "");
       free (actualOutput);
    }
    printf ("\n\t\t\t\tTest Cases for Binary Search\n\n"
@@ -64,15 +66,11 @@ void TestCases () {
            "--------------------------|------|------------------------|\n");
    for (int i = 0; i < numOfTestCases; i++) {
       int* actualOutput = malloc (size[i] * sizeof (int));
-      printf (" | ");
-      for (int j = 0; j < size[i]; j++) printf ("%-3d ", input[i][j]);
-      for (int j = 6 - size[i]; j > 0; j--) printf ("%-3s ", "");
-      printf (" | ");
-      for (int j = 0; j < size[i]; j++) printf ("%-3d ", expOutput[i][j]);
-      for (int j = 6 - size[i]; j > 0; j--) printf ("%-3s ", "");
-      int Keys[] = { 3, 25, -1, 65, 3, -10 };
+      PrintTable (input[i], size[i], 6);
+      PrintTable (expOutput[i], size[i], 6);
+      int Keys[] = { 3, 25, -1, 65, 3, -10 },
+         foundIndex = BinarySearch (expOutput[i], size[i], Keys[i]);
       printf (" | %-3d  | ", Keys[i]);
-      int foundIndex = BinarySearch (expOutput[i], size[i], Keys[i]);
       printf (foundIndex != -1 ? GREEN_TEXT "Element %3d found at %d" RESET_TEXT
               : RED_TEXT "Element %3d Not Found " RESET_TEXT, Keys[i], foundIndex);
       printf (" |\n");
@@ -111,9 +109,8 @@ void UserInput () {
       if (searchChoice == 'y' || searchChoice == 'Y') {
          printf ("Enter element to search: ");
          fgets (buffer, sizeof (buffer), stdin);
-         int key = strtol (buffer, &endptr, 10);
+         int key = strtol (buffer, &endptr, 10), res = BinarySearch (arr, n, key);
          if (endptr != buffer && *endptr == '\n') {
-            int res = BinarySearch (arr, n, key);
             printf ((res != -1) ? "Element %d found at index %d\n"
                     : "Element %d is not found\n", key, res);
             break;

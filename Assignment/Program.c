@@ -18,9 +18,9 @@ void InsertionSort (int arr[], int n) {
 }
 
 int BinarySearch (int arr[], int n, int key) {
-   int low = 0, high = n - 1, res = -1;
+   int low = 0, high = n - 1, res = -1, mid;
    while (low <= high) {
-      int mid = (low + high) / 2;
+      mid = (low + high) / 2;
       if (arr[mid] == key) {
          res = mid;
          high = mid - 1;
