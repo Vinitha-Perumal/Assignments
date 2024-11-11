@@ -4,12 +4,15 @@
 // Vinitha Perumal - GET
 // ------------------------------------------------------------------
 // Program.h
-// Program on main branch.
+// Program on A5 branch.
 // ------------------------------------------------------------------------------------------------
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
-/// <summary>To Print Hello World</summary>
-void PrintHelloWorld ();
+/// <summary>To Perform Insertion Sort</summary>
+void InsertionSort (int arr[], int n);
+
+/// <summary>To Perform Binary Search</summary>
+int BinarySearch (int arr[], int n, int target);
 
 #endif
