@@ -4,12 +4,12 @@
 // Vinitha Perumal - GET
 // ------------------------------------------------------------------
 // Program.h
-// Program on main branch.
+// Program on A6 branch.
 // ------------------------------------------------------------------------------------------------
-#ifndef PROGRAM_H
-#define PROGRAM_H
-
-/// <summary>To Print Hello World</summary>
-void PrintHelloWorld ();
-
-#endif
+//#ifndef PROGRAM_H
+//#define PROGRAM_H
+//
+///// <summary>To Print Hello World</summary>
+//void PrintHelloWorld ();
+//
+//#endif
