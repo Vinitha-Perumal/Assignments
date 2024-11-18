@@ -127,11 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Program.c" />
-    <ClCompile Include="Test.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Program.h" />
+    <ClCompile Include="FSM6A.c" />
+    <ClCompile Include="FSMTest.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
