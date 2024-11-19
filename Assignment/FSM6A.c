@@ -7,22 +7,25 @@
 // Program on A6B branch.
 // ------------------------------------------------------------------------------------------------
 #include <stdio.h>
+#pragma warning(disable : 4996)
 #define _CRT_SECURE_NO_WARNINGS  1
 
 // Define states of the Mealy machine
 typedef enum {
-   S0,  
-   S1,  
-   S2,  
-   S3,  
-   S4,  
-   S5,  
-   S6, 
-   S7   
+   S0,
+   S1,
+   S2,
+   S3,
+   S4,
+   S5,
+   S6,
+   S7
 } State;
 
+State NextMealyState (State currentState, int input, int* output);
+
 // Function to get the next state and output based on the current state and input
-State nextMealyState (State currentState, int input, int* output) {
+State NextMealyState (State currentState, int input, int* output) {
    switch (currentState) {
       case S0:
          if (input == 0) {
@@ -89,7 +92,7 @@ State nextMealyState (State currentState, int input, int* output) {
          }
       case S7:
          if (input == 0) {
-            *output = 0; 
+            *output = 0;
             return S1;   // Transition to S1 if input is '0'
          }
          else {
@@ -99,17 +102,6 @@ State nextMealyState (State currentState, int input, int* output) {
       default:
          return S0;  // Default return to initial state
    }
-}
-
-int processFSM (FILE* inputFile, FILE* outputFile) {
-   State currentState = S0;  // Start in the initial state
-   int input, output = 0;
-   // Read input from the file and process it until the end of file (EOF)
-   while ((input = getc (inputFile)) != EOF) {
-      currentState = nextMealyState (currentState, input - '0', &output);  // Transition to the next state and calculate the output
-      fprintf (outputFile, "%d", output);
-   }
-   return 0;
 }
 
 int main (int argc, char** argv) {
@@ -126,7 +118,7 @@ int main (int argc, char** argv) {
    State currentState = S0;
    int input, output = 0;
    while (fscanf (inputFile, "%1d", &input) == 1) {
-      currentState = nextMealyState (currentState, input, &output);
+      currentState = NextMealyState (currentState, input, &output);
       fprintf (outputFile, "%d", output);
    }
    fclose (inputFile);

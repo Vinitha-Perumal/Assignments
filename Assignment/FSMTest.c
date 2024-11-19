@@ -12,34 +12,66 @@
 #include <string.h>
 #include <windows.h>
 
-int ExecProgram (const char* exeFilePathAndName, const char* inputFilePathAndName, const char* outputFilePathAndName);
-int CompareFiles (const char* file1, const char* file2);
+int ExecProgram (char* exeFilePathAndName, char* inputFilePathAndName, char* outputFilePathAndName);
+int CompareFiles (char* file1, char* file2);
 
-int ExecProgram (const char* exeFilePathAndName, const char* inputFilePathAndName, const char* outputFilePathAndName) {
+/// <summary>
+/// This function will execute the FSM providing the input and output file names as arguments
+/// </summary>
+/// <param name="exeFilePathAndName"></param>
+/// <param name="inputFilePathAndName"></param>
+/// <param name="outputFilePathAndName"></param>
+/// <returns></returns>
+int ExecProgram (char* exeFilePathAndName, char* inputFilePathAndName, char* outputFilePathAndName) {
    char* cmdline = malloc (strlen (exeFilePathAndName) + strlen (inputFilePathAndName) + strlen (outputFilePathAndName) + 3);
    if (cmdline == NULL) {
       printf ("Unable to allocate memory\n");
       return 1;
    }
-   sprintf (cmdline, "%s %s %s", exeFilePathAndName, inputFilePathAndName, outputFilePathAndName);
+   sprintf (cmdline, "%s%s%s%s%s", exeFilePathAndName, " ", inputFilePathAndName, " ", outputFilePathAndName);
+
+   // Set up structures for process information
    STARTUPINFOA si;
    PROCESS_INFORMATION pi;
+
+   // Initialize memory for STARTUPINFO and PROCESS_INFORMATION structures
    ZeroMemory (&si, sizeof (si));
    si.cb = sizeof (si);
    ZeroMemory (&pi, sizeof (pi));
-   if (!CreateProcessA (NULL, cmdline, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+
+   // Attempt to create the process
+   if (!CreateProcessA (
+      NULL,            // Application name (NULL if using command line)
+      cmdline,          // Command line (path to the executable)
+      NULL,            // Process handle not inheritable
+      NULL,            // Thread handle not inheritable
+      FALSE,           // Set handle inheritance to FALSE
+      0,               // No creation flags
+      NULL,            // Use parent's environment block
+      NULL,            // Use parent's starting directory
+      &si,             // Pointer to STARTUPINFO structure
+      &pi))            // Pointer to PROCESS_INFORMATION structure
+   {
+      // If CreateProcess fails, print an error message
+      int err = GetLastError ();
       printf ("Failed to start process. Error: %lu\n", GetLastError ());
       free (cmdline);
       return 1;
    }
+
+   // Wait until the process has finished execution
    WaitForSingleObject (pi.hProcess, INFINITE);
+
+   // Close handles
    CloseHandle (pi.hProcess);
    CloseHandle (pi.hThread);
+
    free (cmdline);
    return 0;
+
 }
 
-int CompareFiles (const char* file1, const char* file2) {
+int CompareFiles (char* file1, char* file2) {
    FILE* f1 = fopen (file1, "r"), * f2 = fopen (file2, "r");
    if (f1 == NULL || f2 == NULL) {
       printf ("Error opening files.\n");
@@ -60,13 +92,19 @@ int CompareFiles (const char* file1, const char* file2) {
    return 0;
 }
 
+/// <summary>
+/// Test Harness
+/// </summary>
+/// <param name="argc"></param>
+/// <param name="argv">argv[1] is the name of the FSM</param>
+/// <returns></returns>
 int main (int argc, char** argv) {
 #define NTESTS 7
    if (argc != 2) {
       printf ("Usage: %s <FSM executable name>\n", argv[0]);
       return -1;
    }
-   const char* inputFiles[] = { "test1in.txt", "test2in.txt", "test3in.txt", "test4in.txt",
+   char* inputFiles[] = { "test1in.txt", "test2in.txt", "test3in.txt", "test4in.txt",
                                 "test5in.txt", "test6in.txt", "test7in.txt" },
       * outputFiles[] = { "test1out.txt", "test2out.txt", "test2out.txt", "test2out.txt",
                           "test2out.txt", "test2out.txt", "test7out.txt" },
@@ -74,7 +112,7 @@ int main (int argc, char** argv) {
                           "test5ref.txt", "test6ref.txt", "test7ref.txt" };
 
    for (int i = 0; i < NTESTS; i++) {
-      const char* inputFile = inputFiles[i],
+      char* inputFile = inputFiles[i],
          * outputFile = outputFiles[i],
          * expectedFile = expectedFiles[i];
       printf ("Running test %d with input file: %s\n", i + 1, inputFile);
