@@ -6,9 +6,25 @@
 // Program.c
 // Program on main branch.
 // ------------------------------------------------------------------------------------------------
-#include <stdio.h>
 #include "Program.h"
 
-void PrintHelloWorld () {
-	printf ("Hello, World\n");
+ComplexNumber Op_Add (ComplexNumber num1, ComplexNumber num2) {
+   ComplexNumber temp;
+   temp.real = num1.real + num2.real;
+   temp.img = num1.img + num2.img;
+   return temp;
+}
+
+ComplexNumber Op_Sub (ComplexNumber num1, ComplexNumber num2) {
+   ComplexNumber temp;
+   temp.real = num1.real - num2.real;
+   temp.img = num1.img - num2.img;
+   return temp;
+}
+
+ComplexNumber Op_mul (ComplexNumber num1, ComplexNumber num2) {
+   ComplexNumber temp;
+   temp.real = (num1.real * num2.real) - (num1.img * num2.img);
+   temp.img = (num1.real * num2.img) + (num1.img * num1.real);
+   return temp;
 }

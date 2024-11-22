@@ -9,7 +9,12 @@
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
-/// <summary>To Print Hello World</summary>
-void PrintHelloWorld ();
+typedef struct ComplexNumber {
+   float real;
+   float img;
+}ComplexNumber;
 
+ComplexNumber Op_Add (ComplexNumber num1, ComplexNumber num2);
+ComplexNumber Op_Sub (ComplexNumber num1, ComplexNumber num2);
+ComplexNumber Op_mul (ComplexNumber num1, ComplexNumber num2);
 #endif
