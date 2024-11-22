@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FSM6A.c">
+    <ClCompile Include="FSMTest.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FSMTest.c">
+    <ClCompile Include="FSM6A.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
