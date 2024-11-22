@@ -9,7 +9,5 @@
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
-/// <summary>To Print Hello World</summary>
-void PrintHelloWorld ();
 
 #endif

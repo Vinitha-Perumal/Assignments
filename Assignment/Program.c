@@ -6,9 +6,3 @@
 // Program.c
 // Program on main branch.
 // ------------------------------------------------------------------------------------------------
-#include <stdio.h>
-#include "Program.h"
-
-void PrintHelloWorld () {
-	printf ("Hello, World\n");
-}
