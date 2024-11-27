@@ -11,9 +11,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <windows.h>
+#include <stdbool.h>
 
 int ExecProgram (char* exeFilePathAndName, char* inputFilePathAndName, char* outputFilePathAndName);
-int CompareFiles (char* file1, char* file2);
+bool CompareFiles (char* file1, char* file2);
 
 /// <summary>
 /// This function will execute the FSM providing the input and output file names as arguments
@@ -71,11 +72,11 @@ int ExecProgram (char* exeFilePathAndName, char* inputFilePathAndName, char* out
 
 }
 
-int CompareFiles (char* file1, char* file2) {
+bool CompareFiles (char* file1, char* file2) {
    FILE* f1 = fopen (file1, "r"), * f2 = fopen (file2, "r");
    if (f1 == NULL || f2 == NULL) {
-      printf ("Error opening files.\n");
-      return 1;
+      printf ("Error opening files\n");
+      return false;
    }
    int pos = 0, ch1, ch2;
    while ((ch1 = fgetc (f1)) != EOF && (ch2 = fgetc (f2)) != EOF) {
@@ -83,13 +84,13 @@ int CompareFiles (char* file1, char* file2) {
          printf ("Error at bit no. %d, Expected %c, Actual %c\n", pos, ch1, ch2);
          fclose (f1);
          fclose (f2);
-         return 1;
+         return false;
       }
       pos++;
    }
    fclose (f1);
    fclose (f2);
-   return 0;
+   return true;
 }
 
 /// <summary>
@@ -106,8 +107,8 @@ int main (int argc, char** argv) {
    }
    char* inputFiles[] = { "test1in.txt", "test2in.txt", "test3in.txt", "test4in.txt",
                                 "test5in.txt", "test6in.txt", "test7in.txt" },
-      * outputFiles[] = { "test1out.txt", "test2out.txt", "test2out.txt", "test2out.txt",
-                          "test2out.txt", "test2out.txt", "test7out.txt" },
+      * outputFiles[] = { "test1out.txt", "test2out.txt", "test3out.txt", "test4out.txt",
+                          "test5out.txt", "test6out.txt", "test7out.txt" },
       * expectedFiles[] = { "test1ref.txt", "test2ref.txt", "test3ref.txt", "test4ref.txt",
                           "test5ref.txt", "test6ref.txt", "test7ref.txt" };
 
@@ -121,10 +122,8 @@ int main (int argc, char** argv) {
          continue;
       }
       // Compare the output with the expected reference file
-      if (CompareFiles (outputFile, expectedFile) == 0)
-         printf ("Test %d passed. Output matches expected result.\n\n", i + 1);
-      else
-         printf ("Test %d failed. Output does not match expected result.\n\n", i + 1);
+      if (CompareFiles (outputFile, expectedFile)) printf ("Test %d passed\n\n", i + 1);
+      else printf ("Test %d failed\n\n", i + 1);
    }
    return 0;
 }
