@@ -3,13 +3,17 @@
 // Copyright (c) Metamation India.
 // Vinitha Perumal - GET
 // ------------------------------------------------------------------
-// Program.h
-// Program on main branch.
+// Cash.c
+// Program on Test2.2 branch.
 // ------------------------------------------------------------------------------------------------
-#ifndef PROGRAM_H
-#define PROGRAM_H
+#include "Cash.h"
 
-/// <summary>To Print Hello World</summary>
-void PrintHelloWorld ();
-
-#endif
+int Cash (int cashPaid, int actualAmount, int coins[4]) {
+   int change = cashPaid - actualAmount, denominations[] = { 10,5,2,1 };
+   if (change < 0) return 0;
+   for (int i = 0; i < 4; i++) {
+      coins[i] = change / denominations[i];
+      change %= denominations[i];
+   }
+   return 1;
+}

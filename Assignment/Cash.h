@@ -3,12 +3,13 @@
 // Copyright (c) Metamation India.
 // Vinitha Perumal - GET
 // ------------------------------------------------------------------
-// Test.c
-// Program on main branch.
+// Cash.h
+// Program on Test2.2 branch.
 // ------------------------------------------------------------------------------------------------
-#include "Program.h"
+#ifndef CASH_H
+#define CASH_H
 
-int main () {
-   PrintHelloWorld ();
-   return 0;
-}
+/// <summary>Calculates the change and returns the number of coins (10Rs, 5Rs, 2Rs, 1Rs) to be given as change.</summary>
+int Cash (int cashPaid, int actualAmount, int coins[4]);
+
+#endif
