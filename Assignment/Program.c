@@ -18,14 +18,11 @@ void InsertionSort (int arr[], int n) {
 }
 
 int BinarySearch (int arr[], int n, int key) {
-   int low = 0, high = n - 1, res = -1, mid;
+   int low = 0, high = n - 1, mid;
    while (low <= high) {
       mid = (low + high) / 2;
-      if (arr[mid] == key) {
-         res = mid;
-         high = mid - 1;
-      }
+      if (arr[mid] == key) return mid;
       (arr[mid] < key) ? (low = mid + 1) : (high = mid - 1);
    }
-   return res;
+   return -1;
 }
