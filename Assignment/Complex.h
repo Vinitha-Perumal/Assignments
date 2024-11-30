@@ -10,13 +10,13 @@
 #define COMPLEX_H
 
 typedef struct ComplexNumber {
-   float real, img;
+   float Real, Img;
 }ComplexNumber;
 
 /// <summary>To Add two complex numbers.</summary>
 ComplexNumber Op_Add (ComplexNumber num1, ComplexNumber num2);
 
-/// <summary>To Subtract one complex number from another.</summary>
+/// <summary>Returns the difference of 2 complex numbers.</summary>
 ComplexNumber Op_Sub (ComplexNumber num1, ComplexNumber num2);
 
 /// <summary>To Multiply two complex numbers</summary>

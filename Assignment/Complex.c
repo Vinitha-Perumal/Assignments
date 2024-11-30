@@ -10,26 +10,26 @@
 #include <math.h>
 
 ComplexNumber Op_Add (ComplexNumber num1, ComplexNumber num2) {
-   ComplexNumber temp = { num1.real + num2.real, num1.img + num2.img };
+   ComplexNumber temp = { num1.Real + num2.Real, num1.Img + num2.Img };
    return temp;
 }
 
 ComplexNumber Op_Sub (ComplexNumber num1, ComplexNumber num2) {
-   ComplexNumber temp = { num1.real - num2.real, num1.img - num2.img };
+   ComplexNumber temp = { num1.Real - num2.Real, num1.Img - num2.Img };
    return temp;
 }
 
 ComplexNumber Op_Mul (ComplexNumber num1, ComplexNumber num2) {
-   ComplexNumber temp = { (num1.real * num2.real) - (num1.img * num2.img),
-      (num1.real * num2.img) + (num1.img * num2.real) };
+   ComplexNumber temp = { (num1.Real * num2.Real) - (num1.Img * num2.Img),
+      (num1.Real * num2.Img) + (num1.Img * num2.Real) };
    return temp;
 }
 
 ComplexNumber Op_Conj (ComplexNumber num) {
-   ComplexNumber temp = { num.real, -num.img };
+   ComplexNumber temp = { num.Real, -num.Img };
    return temp;
 }
 
 double Op_Mod (ComplexNumber num) {
-   return sqrt (num.real * num.real + num.img * num.img);
+   return sqrt (num.Real * num.Real + num.Img * num.Img);
 }
