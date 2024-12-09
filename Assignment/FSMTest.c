@@ -13,8 +13,8 @@
 #include <windows.h>
 #include <stdbool.h>
 
-int ExecProgram (char* exeFilePathAndName, char* inputFilePathAndName, char* outputFilePathAndName);
-bool CompareFiles (char* file1, char* file2);
+int ExecProgram (char* exeFilePathAndName, const char* inputFilePathAndName, char* outputFilePathAndName);
+bool CompareFiles (char* file1, const char* file2);
 
 /// <summary>
 /// This function will execute the FSM providing the input and output file names as arguments
@@ -23,7 +23,7 @@ bool CompareFiles (char* file1, char* file2);
 /// <param name="inputFilePathAndName"></param>
 /// <param name="outputFilePathAndName"></param>
 /// <returns></returns>
-int ExecProgram (char* exeFilePathAndName, char* inputFilePathAndName, char* outputFilePathAndName) {
+int ExecProgram (char* exeFilePathAndName, const char* inputFilePathAndName, char* outputFilePathAndName) {
    char* cmdline = malloc (strlen (exeFilePathAndName) + strlen (inputFilePathAndName) + strlen (outputFilePathAndName) + 3);
    if (cmdline == NULL) {
       printf ("Unable to allocate memory\n");
@@ -72,7 +72,7 @@ int ExecProgram (char* exeFilePathAndName, char* inputFilePathAndName, char* out
 
 }
 
-bool CompareFiles (char* file1, char* file2) {
+bool CompareFiles (char* file1, const char* file2) {
    FILE* f1 = fopen (file1, "r"), * f2 = fopen (file2, "r");
    if (f1 == NULL || f2 == NULL) {
       printf ("Error opening files\n");
@@ -105,17 +105,17 @@ int main (int argc, char** argv) {
       printf ("Usage: %s <FSM executable name>\n", argv[0]);
       return -1;
    }
-   char* inputFiles[] = { "test1in.txt", "test2in.txt", "test3in.txt", "test4in.txt",
+   const char* inputFiles[] = { "test1in.txt", "test2in.txt", "test3in.txt", "test4in.txt",
                                 "test5in.txt", "test6in.txt", "test7in.txt" },
-      * outputFiles[] = { "test1out.txt", "test2out.txt", "test3out.txt", "test4out.txt",
-                          "test5out.txt", "test6out.txt", "test7out.txt" },
       * expectedFiles[] = { "test1ref.txt", "test2ref.txt", "test3ref.txt", "test4ref.txt",
-                          "test5ref.txt", "test6ref.txt", "test7ref.txt" };
+                         "test5ref.txt", "test6ref.txt", "test7ref.txt" };
+   char* outputFiles[] = { "test1out.txt", "test2out.txt", "test3out.txt", "test4out.txt",
+                           "test5out.txt", "test6out.txt", "test7out.txt" };
 
    for (int i = 0; i < NTESTS; i++) {
-      char* inputFile = inputFiles[i],
-         * outputFile = outputFiles[i],
+      const char* inputFile = inputFiles[i],
          * expectedFile = expectedFiles[i];
+      char *outputFile = outputFiles[i];
       printf ("Running test %d with input file: %s\n", i + 1, inputFile);
       if (ExecProgram (argv[1], inputFile, outputFile) != 0) {
          printf ("Error executing test %d\n", i + 1);
