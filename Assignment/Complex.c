@@ -33,3 +33,7 @@ ComplexNumber Op_Conj (ComplexNumber num) {
 double Op_Mod (ComplexNumber num) {
    return sqrt (num.Real * num.Real + num.Img * num.Img);
 }
+
+int IsEqual (ComplexNumber num1, ComplexNumber num2) {
+   return num1.Real == num2.Real && num1.Img == num2.Img;
+}

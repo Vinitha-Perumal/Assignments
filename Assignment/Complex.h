@@ -28,4 +28,7 @@ ComplexNumber Op_Conj (ComplexNumber num);
 /// <summary>To calculate the Modulus of a complex number.</summary>
 double Op_Mod (ComplexNumber num);
 
+/// <summary>To check if two complex numbers are equal.</summary>
+int IsEqual (ComplexNumber num1, ComplexNumber num2);
+
 #endif
