@@ -10,6 +10,6 @@
 #define CASH_H
 
 /// <summary>Calculates the change and returns the number of coins (10Rs, 5Rs, 2Rs, 1Rs) to be given as change.</summary>
-int Cash (int cashPaid, int actualAmount, int coins[4]);
+int Cash (int change, int denominations[], int numOfDenominations, int coins[]);
 
 #endif
