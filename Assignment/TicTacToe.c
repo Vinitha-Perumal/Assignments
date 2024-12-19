@@ -6,7 +6,11 @@
 // TicTacToe.c
 // Program on Test3.2 branch.
 // ------------------------------------------------------------------------------------------------
+#include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h> 
+#include <stdlib.h>
+#include <string.h>
 #define _CRT_SECURE_NO_WARNINGS
 #pragma warning(disable : 4996)
 #define EMPTY ' '  
@@ -52,21 +56,17 @@ int CheckWinner (const char board[3][3], char currentPlayer) {
 
 int IsBoardFull (const char board[3][3]) {
    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 3; j++) {
+      for (int j = 0; j < 3; j++)
          if (board[i][j] == EMPTY) return 0;
-      }
    }
    return 1;
 }
 
 int MakeMove (char board[3][3], char currentPlayer, int move) {
-   if (move < 1 || move > 9) return 0;
    int row = (move - 1) / 3, col = (move - 1) % 3;
-   if (board[row][col] == EMPTY) {
-      board[row][col] = currentPlayer;
-      return 1;
-   }
-   return 0;
+   if (board[row][col] != EMPTY) return 0;
+   board[row][col] = currentPlayer;
+   return 1;
 }
 
 void SwitchPlayer (char* currentPlayer, char player1Symbol, char player2Symbol) {
@@ -74,23 +74,27 @@ void SwitchPlayer (char* currentPlayer, char player1Symbol, char player2Symbol) 
 }
 
 void GetPlayerSymbols (char* player1Symbol, char* player2Symbol) {
-   char symbol;
+   char input[3];
    printf ("Player 1, choose your symbol (X/O): ");
-   while (1) {
-      scanf (" %c", &symbol);
-      if (symbol == 'X' || symbol == 'x') {
-         *player1Symbol = 'X';
-         *player2Symbol = 'O';
-         break;
+   while (true) {
+      fgets (input, sizeof (input), stdin);
+      if (input[strlen (input) - 1] != '\n') while (getchar () != '\n');
+      char symbol = tolower (input[0]);
+      switch (symbol) {
+         case 'x':
+            *player1Symbol = 'X';
+            *player2Symbol = 'O';
+            printf ("Player 2, your symbol is '%c'\n", *player2Symbol);
+            return;
+         case 'o':
+            *player1Symbol = 'O';
+            *player2Symbol = 'X';
+            printf ("Player 2, your symbol is '%c'\n", *player2Symbol);
+            return;
+         default:
+            printf ("Invalid choice! Please choose 'X' or 'O': ");
       }
-      else if (symbol == 'O' || symbol == 'o') {
-         *player1Symbol = 'O';
-         *player2Symbol = 'X';
-         break;
-      }
-      else printf ("Invalid choice! Please choose 'X' or 'O': ");
    }
-   printf ("Player 2, your symbol is '%c'.\n", *player2Symbol);
 }
 
 int main () {
@@ -101,18 +105,21 @@ int main () {
    InitializeBoard (board);
    while (!gameOver) {
       PrintBoard (board);
-      printf ("Player %c, enter a cell (1-9): ", currentPlayer);
-      while (1) {
-         if (scanf ("%d", &move) != 1) {
-            while (getchar () != '\n');
-            printf ("Invalid input! Please enter a number between 1 and 9: ");
+      while (true) {
+         char input[10];
+         printf ("Player %c, enter a cell (1-9): ", currentPlayer);
+         if (!fgets (input, sizeof (input), stdin)) {
+            printf ("error reading input, try again\n");
             continue;
          }
-         if (move < 1 || move > 9) printf ("\nInvalid move! Please enter a number between 1 and 9: ");
-         else {
-            if (MakeMove (board, currentPlayer, move)) break;
-            else printf ("Invalid move! The cell is already taken. Try again: ");
+         char* endptr;
+         move = strtol (input, &endptr, 10);
+         if (endptr == input || *endptr != '\n' || move < 1 || move > 9) {
+            printf ("\nInvalid move! Please enter a number between 1 and 9: ");
+            continue;
          }
+         if (MakeMove (board, currentPlayer, move)) break;
+         else printf ("Invalid move! The cell is already taken. Try again: ");
       }
       if (CheckWinner (board, currentPlayer)) {
          PrintBoard (board);
