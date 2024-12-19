@@ -14,7 +14,7 @@
 #include <stdbool.h>
 
 int ExecProgram (char* exeFilePathAndName, const char* inputFilePathAndName, char* outputFilePathAndName);
-bool CompareFiles (char* file1, const char* file2);
+bool CompareFiles (char* file1, const char* file2, int* pos, char* ch1, char* ch2);
 
 /// <summary>
 /// This function will execute the FSM providing the input and output file names as arguments
@@ -72,21 +72,20 @@ int ExecProgram (char* exeFilePathAndName, const char* inputFilePathAndName, cha
 
 }
 
-bool CompareFiles (char* file1, const char* file2) {
+bool CompareFiles (char* file1, const char* file2, int* pos, char* ch1, char* ch2) {
    FILE* f1 = fopen (file1, "r"), * f2 = fopen (file2, "r");
    if (f1 == NULL || f2 == NULL) {
       printf ("Error opening files\n");
       return false;
    }
-   int pos = 0, ch1, ch2;
-   while ((ch1 = fgetc (f1)) != EOF && (ch2 = fgetc (f2)) != EOF) {
-      if (ch1 != ch2) {
-         printf ("Error at bit no. %d, Expected %c, Actual %c\n", pos, ch1, ch2);
+   *pos = 0;
+   while ((*ch1 = fgetc (f1)) != EOF && (*ch2 = fgetc (f2)) != EOF) {
+      if (*ch1 != *ch2) {
          fclose (f1);
          fclose (f2);
          return false;
       }
-      pos++;
+      (*pos)++;
    }
    fclose (f1);
    fclose (f2);
@@ -109,21 +108,25 @@ int main (int argc, char** argv) {
                                 "test5in.txt", "test6in.txt", "test7in.txt" },
       * expectedFiles[] = { "test1ref.txt", "test2ref.txt", "test3ref.txt", "test4ref.txt",
                          "test5ref.txt", "test6ref.txt", "test7ref.txt" };
-   char* outputFiles[] = { "test1out.txt", "test2out.txt", "test3out.txt", "test4out.txt",
-                           "test5out.txt", "test6out.txt", "test7out.txt" };
-
+   char outputFile[] = { "testout.txt" };
+   bool testsPassed = true;
    for (int i = 0; i < NTESTS; i++) {
-      const char* inputFile = inputFiles[i],
-         * expectedFile = expectedFiles[i];
-      char *outputFile = outputFiles[i];
-      printf ("Running test %d with input file: %s\n", i + 1, inputFile);
+      const char* inputFile = inputFiles[i], * expectedFile = expectedFiles[i];
       if (ExecProgram (argv[1], inputFile, outputFile) != 0) {
          printf ("Error executing test %d\n", i + 1);
+         testsPassed = false;
          continue;
       }
+      int pos = 0;
+      char expectedChar, actualChar;
       // Compare the output with the expected reference file
-      if (CompareFiles (outputFile, expectedFile)) printf ("Test %d passed\n\n", i + 1);
-      else printf ("Test %d failed\n\n", i + 1);
+      if (!CompareFiles (outputFile, expectedFile, &pos, &expectedChar, &actualChar)) {
+         printf ("Test %d failed with input file: %s\n", i + 1, inputFile);
+         printf ("Test %d failed at bit %d, Expected '%c', actual '%c'\n", i + 1, pos, expectedChar, actualChar);
+         testsPassed = false;
+         break;
+      }
    }
+   if (testsPassed) printf ("All TestCases Passed\n");
    return 0;
 }

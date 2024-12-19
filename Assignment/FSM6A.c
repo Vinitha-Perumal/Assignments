@@ -28,77 +28,29 @@ State NextMealyState (State currentState, int input, int* output);
 State NextMealyState (State currentState, int input, int* output) {
    switch (currentState) {
       case S0:
-         if (input == 0) {
-            *output = 0;
-            return S1;  // Transition to S1 after '0'
-         }
-         else {
-            *output = 0;
-            return S5;  // Transition to S5 if input is '1'
-         }
+         *output = 0;
+         return (input == 0) ? S1 : S5;  // Transition to S1 if input is '0', otherwise to S5
       case S1:
-         if (input == 1) {
-            *output = 0;
-            return S2;  // Transition to S2 after '01'
-         }
-         else {
-            *output = 0;
-            return S1;  // Stay in S1 if input is '0'
-         }
+         *output = 0;
+         return (input == 1) ? S2 : S1;  // Transition to S2 if input is '1', otherwise stay in S1
       case S2:
-         if (input == 1) {
-            *output = 0;
-            return S3;    // Transitions to S3 after '011'
-         }
-         else {
-            *output = 0;
-            return S1;  // Return to S1 if input is '0'
-         }
+         *output = 0;
+         return (input == 1) ? S3 : S1;  // Transition to S3 if input is '1', otherwise go back to S1
       case S3:
-         if (input == 0) {
-            *output = 1;  // output '1' upon seeing '0110'
-            return S4;  // Transitions to S4 
-         }
-         else {
-            *output = 0;
-            return S5;    // Transitions to S5 if input is '1'
-         }
+         *output = (input == 0) ? 1 : 0; // Output 1 if input is '0', otherwise output 0
+         return (input == 0) ? S4 : S5;  // Transition to S4 if input is '0', otherwise to S5
       case S4:
-         if (input == 1) {
-            *output = 1;   // output '1' upon seeing '1101'
-            return S2;     // Return to S2  
-         }
-         else {
-            *output = 0;
-            return S1;    // Return to S1 if input is '0'
-         }
+         *output = (input == 1) ? 1 : 0; // Output 1 if input is '1', otherwise output 0
+         return (input == 1) ? S2 : S1;  // Transition to S2 if input is '1', otherwise go back to S1
       case S5:
-         if (input == 0) {
-            *output = 0;
-            return S6;   // Transition to S6 if input is '0'
-         }
-         else {
-            *output = 0;
-            return S5;   // Stay in S5 if input is '1'
-         }
+         *output = 0;
+         return (input == 0) ? S6 : S5;  // Transition to S6 if input is '0', otherwise stay in S5
       case S6:
-         if (input == 1) {
-            *output = 1; // output '1' upon seeing '1101'
-            return S7;   // move to S7
-         }
-         else {
-            *output = 0;
-            return S1;   // Transition to S1 if input is '0'
-         }
+         *output = (input == 1) ? 1 : 0; // Output 1 if input is '1', otherwise output 0
+         return (input == 1) ? S7 : S1;  // Transition to S7 if input is '1', otherwise go back to S1
       case S7:
-         if (input == 0) {
-            *output = 0;
-            return S1;   // Transition to S1 if input is '0'
-         }
-         else {
-            *output = 0;
-            return S3;   // Transition to S3 if input is '1'
-         }
+         *output = 0;
+         return (input == 0) ? S1 : S3;  // Transition to S1 if input is '0', otherwise to S3
       default:
          return S0;  // Default return to initial state
    }
