@@ -1,4 +1,4 @@
-// ------------------------------------------------------------------------------------------------
+﻿// ------------------------------------------------------------------------------------------------
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
 // Vinitha Perumal - GET
@@ -12,67 +12,63 @@
 
 void PrintChessBoard (FILE* output);
 int CompareFiles (const char* outputFile, const char* referenceFile);
+void PrintCell (FILE* output, wchar_t piece);
+
+void PrintCell (FILE* output, wchar_t piece) {
+   if (piece != L'\0') {
+      fwprintf (output, L" %lc ", piece);
+      wprintf (L" %lc ", piece);
+   }
+   else {
+      fputws (L"   ", output);
+      wprintf (L"   ");
+   }
+}
 
 void PrintChessBoard (FILE* output) {
+   const wchar_t* topBorder = L"┏━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┓\n",
+      * middleBorder = L"┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫\n",
+      * bottomBorder = L"┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛\n";
    wchar_t whitePieces[8] = { 0x2656, 0x2658, 0x2657, 0x2655, 0x2654, 0x2657, 0x2658, 0x2656 },
       blackPieces[8] = { 0x265C, 0x265E, 0x265D, 0x265B, 0x265A, 0x265D, 0x265E, 0x265C },
       whitePawn = 0x2659, blackPawn = 0x265F;
    // top border
-   wprintf (L"%lc", 0x250F);
-   fwprintf (output, L"%lc", 0x250F);
-   for (int i = 0; i < 7; i++) {
-      wprintf (L"%lc%lc%lc%lc", 0x2501, 0x2501, 0x2501, 0x2533);
-      fwprintf (output, L"%lc%lc%lc%lc", 0x2501, 0x2501, 0x2501, 0x2533);
-   }
-   wprintf (L"%lc%lc%lc%lc\n", 0x2501, 0x2501, 0x2501, 0x2513);
-   fwprintf (output, L"%lc%lc%lc%lc\n", 0x2501, 0x2501, 0x2501, 0x2513);
+   fputws (topBorder, output);
+   wprintf (L"%s", topBorder);
    for (int i = 0; i < 8; i++) {
+      // left vertical border
+      fputws (L"┃", output);
+      wprintf (L"┃");
       for (int j = 0; j < 8; j++) {
-         wprintf (L"%lc ", 0x2503);
-         fwprintf (output, L"%lc ", 0x2503);
-         if (i == 0) {
-            wprintf (L"%lc ", blackPieces[j]);
-            fwprintf (output, L"%lc ", blackPieces[j]);
+         wchar_t piece = L'\0';
+         switch (i) {
+            case 0:
+               piece = blackPieces[j];
+               break;
+            case 1:
+               piece = blackPawn;
+               break;
+            case 6:
+               piece = whitePawn;
+               break;
+            case 7:
+               piece = whitePieces[j];
+               break;
          }
-         else if (i == 1) {
-            wprintf (L"%lc", blackPawn);
-            fwprintf (output, L"%lc", blackPawn);
-         }
-         else if (i == 6) {
-            wprintf (L"%lc ", whitePawn);
-            fwprintf (output, L"%lc ", whitePawn);
-         }
-         else if (i == 7) {
-            wprintf (L"%lc ", whitePieces[j]);
-            fwprintf (output, L"%lc ", whitePieces[j]);
-         }
-         else {
-            wprintf (L"  ");
-            fwprintf (output, L"  ");
-         }
+         PrintCell (output, piece);
+         fputws (L"┃", output);
+         wprintf (L"┃");
       }
-      wprintf (L"%lc\n", 0x2503);
-      fwprintf (output, L"%lc\n", 0x2503);
+      wprintf (L"\n");
+      fputws (L"\n", output);
       if (i < 7) {
-         wprintf (L"%lc", 0x2523);
-         fwprintf (output, L"%lc", 0x2523);
-         for (int k = 0; k < 7; k++) {
-            wprintf (L"%lc%lc%lc%lc", 0x2501, 0x2501, 0x2501, 0x254B);
-            fwprintf (output, L"%lc%lc%lc%lc", 0x2501, 0x2501, 0x2501, 0x254B);
-         }
-         wprintf (L"%lc%lc%lc%lc\n", 0x2501, 0x2501, 0x2501, 0x252B);
-         fwprintf (output, L"%lc%lc%lc%lc\n", 0x2501, 0x2501, 0x2501, 0x252B);
+         fputws (middleBorder, output);
+         wprintf (L"%s", middleBorder);
       }
    }
    // bottom border
-   wprintf (L"%lc", 0x2517);
-   fwprintf (output, L"%lc", 0x2517);
-   for (int i = 0; i < 7; i++) {
-      wprintf (L"%lc%lc%lc%lc", 0x2501, 0x2501, 0x2501, 0x253B);
-      fwprintf (output, L"%lc%lc%lc%lc", 0x2501, 0x2501, 0x2501, 0x253B);
-   }
-   wprintf (L"%lc%lc%lc%lc", 0x2501, 0x2501, 0x2501, 0x251B);
-   fwprintf (output, L"%lc%lc%lc%lc", 0x2501, 0x2501, 0x2501, 0x251B);
+   fputws (bottomBorder, output);
+   wprintf (L"%s", bottomBorder);
 }
 
 int CompareFiles (const char* outputFile, const char* referenceFile) {
@@ -83,8 +79,8 @@ int CompareFiles (const char* outputFile, const char* referenceFile) {
       return -1;
    }
    int row = 1, col = 1;
-   wchar_t outputChar, referenceChar;
    while (1) {
+      wchar_t outputChar, referenceChar;
       outputChar = fgetwc (output);
       referenceChar = fgetwc (reference);
       if (outputChar == WEOF && referenceChar == WEOF) {
@@ -116,6 +112,5 @@ int main () {
    }
    PrintChessBoard (output);
    fclose (output);
-   int result = CompareFiles ("output.txt", "ref.txt");
-   return result;
+   return CompareFiles ("output.txt", "ref.txt");
 }
