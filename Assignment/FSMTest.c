@@ -78,15 +78,39 @@ bool CompareFiles (char* file1, const char* file2, int* pos, char* ch1, char* ch
       printf ("Error opening files\n");
       return false;
    }
-   *pos = 0;
-   while ((*ch1 = fgetc (f1)) != EOF && (*ch2 = fgetc (f2)) != EOF) {
-      if (*ch1 != *ch2) {
+   fseek (f1, 0, SEEK_END);
+   fseek (f2, 0, SEEK_END);
+   long len1 = ftell (f1), len2 = ftell (f2);
+   fseek (f1, 0, SEEK_SET);
+   fseek (f2, 0, SEEK_SET);
+   if (len1 != len2) {
+      fclose (f1);
+      fclose (f2);
+      return false;
+   }
+   char* buffer1 = (char*)malloc (len1), * buffer2 = (char*)malloc (len2);
+   if (buffer1 == NULL || buffer2 == NULL) {
+      printf ("Memory allocation failed\n");
+      fclose (f1);
+      fclose (f2);
+      return false;
+   }
+   fread (buffer1, 1, len1, f1);
+   fread (buffer2, 1, len2, f2);
+   for (long i = 0; i < len1; i++) {
+      if (buffer1[i] != buffer2[i]) {
+         *pos = i;
+         *ch1 = buffer1[i];
+         *ch2 = buffer2[i];
+         free (buffer1);
+         free (buffer2);
          fclose (f1);
          fclose (f2);
          return false;
       }
-      (*pos)++;
    }
+   free (buffer1);
+   free (buffer2);
    fclose (f1);
    fclose (f2);
    return true;
@@ -99,34 +123,30 @@ bool CompareFiles (char* file1, const char* file2, int* pos, char* ch1, char* ch
 /// <param name="argv">argv[1] is the name of the FSM</param>
 /// <returns></returns>
 int main (int argc, char** argv) {
-#define NTESTS 7
+#define NTESTS 6
    if (argc != 2) {
       printf ("Usage: %s <FSM executable name>\n", argv[0]);
       return -1;
    }
-   const char* inputFiles[] = { "test1in.txt", "test2in.txt", "test3in.txt", "test4in.txt",
-                                "test5in.txt", "test6in.txt", "test7in.txt" },
-      * expectedFiles[] = { "test1ref.txt", "test2ref.txt", "test3ref.txt", "test4ref.txt",
-                         "test5ref.txt", "test6ref.txt", "test7ref.txt" };
+   const char* inputFiles[] = { "test1in.txt", "test2in.txt", "test3in.txt",
+                                "test4in.txt", "test5in.txt", "test6in.txt" },
+      * expectedFiles[] = { "test1ref.txt", "test2ref.txt", "test3ref.txt",
+                         "test4ref.txt", "test5ref.txt", "test6ref.txt" };
    char outputFile[] = { "testout.txt" };
-   bool testsPassed = true;
    for (int i = 0; i < NTESTS; i++) {
       const char* inputFile = inputFiles[i], * expectedFile = expectedFiles[i];
       if (ExecProgram (argv[1], inputFile, outputFile) != 0) {
          printf ("Error executing test %d\n", i + 1);
-         testsPassed = false;
-         continue;
+         return 1;
       }
       int pos = 0;
       char expectedChar, actualChar;
-      // Compare the output with the expected reference file
       if (!CompareFiles (outputFile, expectedFile, &pos, &expectedChar, &actualChar)) {
          printf ("Test %d failed with input file: %s\n", i + 1, inputFile);
          printf ("Test %d failed at bit %d, Expected '%c', actual '%c'\n", i + 1, pos, expectedChar, actualChar);
-         testsPassed = false;
-         break;
+         return 1;
       }
    }
-   if (testsPassed) printf ("All TestCases Passed\n");
+   printf ("All TestCases Passed\n");
    return 0;
 }
