@@ -10,14 +10,19 @@
 #include <io.h>
 #include <fcntl.h>
 
+/// <summary>To print the chessboard to the given output file </summary>
 void PrintChessBoard (FILE* output);
+
+/// <summary>To compare the output file with a reference file </summary>
 int CompareFiles (const char* outputFile, const char* referenceFile);
+
+/// <summary>To print a character(or an empty space) to both the output file and the console </summary>
 void PrintCell (FILE* output, wchar_t piece);
 
-void PrintCell (FILE* output, wchar_t piece) {
-   if (piece != L'\0') {
-      fwprintf (output, L" %lc ", piece);
-      wprintf (L" %lc ", piece);
+void PrintCell (FILE* output, wchar_t character) {
+   if (character != L'\0') {
+      fwprintf (output, L" %lc ", character);
+      wprintf (L" %lc ", character);
    }
    else {
       fputws (L"   ", output);
@@ -80,9 +85,7 @@ int CompareFiles (const char* outputFile, const char* referenceFile) {
    }
    int row = 1, col = 1;
    while (1) {
-      wchar_t outputChar, referenceChar;
-      outputChar = fgetwc (output);
-      referenceChar = fgetwc (reference);
+      wchar_t outputChar = fgetwc (output), referenceChar = fgetwc (reference);
       if (outputChar == WEOF && referenceChar == WEOF) {
          wprintf (L"\n\nTest Passed\n");
          fclose (output);
