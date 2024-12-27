@@ -8,11 +8,11 @@
 // ------------------------------------------------------------------------------------------------
 #include "Cash.h"
 
-int Cash (int change, int denominations[], int numOfDenominations, int coins[]) {
-   if (change < 0) return 0;
+int Cash (int balance, int denominations[], int numOfDenominations, int coins[]) {
+   if (balance < 0) return 0;
    for (int i = 0; i < numOfDenominations; i++) {
-      coins[i] = change / denominations[i];
-      change %= denominations[i];
+      coins[i] = balance / denominations[i];
+      balance %= denominations[i];
    }
    return 1;
 }
