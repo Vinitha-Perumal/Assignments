@@ -11,15 +11,18 @@
 #include <malloc.h>
 #include <conio.h>
 #include <string.h>
+#include <stdbool.h>
 #include "Program.h"
 
 // ANSI color code
 #define GREEN_TEXT "\033[0;32m"
 #define RED_TEXT "\033[0;31m"
 #define RESET_TEXT "\033[0m"
+#define ARR_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
 int CompareArr (int arr1[], int arr2[], int size);
 void TestCases ();
+int GetInputElement (int index);
 void UserInput ();
 void PrintTable (int* arr, int arrSize, int columns);
 
@@ -35,65 +38,89 @@ int CompareArr (int arr1[], int arr2[], int size) {
 }
 
 void TestCases () {
-   int* input[] = { (int[]) { 12, 2, 34, 22, 13 }, (int[]) { 6, 23, 20, 12 },
-                    (int[]) { 6, 5, 4, 3, 2, 1 }, (int[]) { 3, 5, 65 },
-                    (int[]) { 3, 3, 3, 3, 3, 3 }, (int[]) { -2, -5, -10, 10, -3, -5 } },
-     * expOutput[] = { (int[]) { 2, 12, 13, 22, 34 }, (int[]) { 6, 12, 20, 23 },
-                       (int[]) { 1, 2, 3, 4, 5, 6 }, (int[]) { 3, 5, 65 },
-                       (int[]) { 3, 3, 3, 3, 3, 3 }, (int[]) { -10, -5, -5, -3, -2, 10 } };
-   int numOfTestCases = (int)sizeof (input) / sizeof (input[0]), size[] = { 5, 4, 6, 3, 6, 6 };
+   int row0Input[] = { 12, 2, 34, 22, 13 }, row1Input[] = { 6, 23, 20, 12 },
+      row2Input[] = { 6, 5, 4, 3, 2, 1 }, row3Input[] = { 3, 5, 65 },
+      row4Input[] = { 3, 7, -20, 56, 20, 2 }, row5Input[] = { -2, -5, -10, 10, -3, -5 },
+      row0Expected[] = { 2, 12, 13, 22, 34 }, row1Expected[] = { 6, 12, 20, 23 },
+      row2Expected[] = { 1, 2, 3, 4, 5, 6 }, row3Expected[] = { 3, 5, 65 },
+      row4Expected[] = { -20, 2, 3, 7, 20, 56 }, row5Expected[] = { -10, -5, -5, -3, -2, 10 },
+      * input[] = { row0Input, row1Input, row2Input, row3Input, row4Input, row5Input },
+      * expOutput[] = { row0Expected, row1Expected, row2Expected, row3Expected, row4Expected,
+      row5Expected }, numOfTestCases = (int)sizeof (input) / sizeof (input[0]),
+      sizes[] = { ARR_SIZE (row0Input), ARR_SIZE (row1Input), ARR_SIZE (row2Input),
+                  ARR_SIZE (row3Input), ARR_SIZE (row4Input), ARR_SIZE (row5Input) };
    printf ("\n\t\t\t\tTestcases for Insertion Sort\n\n"
            "\tInput\t\t\t\tOutput\t\t\tTest Case Result\n |--------------------------|"
            "--------------------------|--------------------------|\n");
    for (int i = 0; i < numOfTestCases; i++) {
-      int* actualOutput = malloc (size[i] * sizeof (int));
+      int size = sizes[i], * actualOutput = malloc (size * sizeof (int));
       if (actualOutput == NULL) {
-         fprintf (stderr, "memory allcoation failed");
+         fprintf (stderr, "memory allocation failed");
          return;
       }
-      for (int j = 0; j < size[i]; j++) actualOutput[j] = input[i][j];
-      InsertionSort (actualOutput, size[i]);
-      PrintTable (input[i], size[i], 6);
-      PrintTable (expOutput[i], size[i], 6);
-      const char* result = CompareArr (actualOutput, expOutput[i], size[i]) ?
+      for (int j = 0; j < size; j++) actualOutput[j] = input[i][j];
+      InsertionSort (actualOutput, size);
+      PrintTable (input[i], size, 6);
+      PrintTable (expOutput[i], size, 6);
+      const char* result = CompareArr (actualOutput, expOutput[i], size) ?
          GREEN_TEXT "Pass" RESET_TEXT : RED_TEXT "fail" RESET_TEXT;
       int padding = (30 - strlen (result)) / 2; // Calculate left padding
       printf (" |%*s%20s%*s   |\n", padding, "", result, padding, "");
       free (actualOutput);
    }
    printf ("\n\t\t\t\tTest Cases for Binary Search\n\n"
-           "\tInput\t\t\t\tOutput\t\t  Key\t\tResult\n |--------------------------|"
-           "--------------------------|------|------------------------|\n");
+           "\tInput\t\t\t\tOutput\t\t  Key\t\tIndex\t\tTest Case Result\n |--------------------------|"
+           "--------------------------|------|-----------------------|------------------|\n");
    for (int i = 0; i < numOfTestCases; i++) {
-      int* actualOutput = malloc (size[i] * sizeof (int));
-      PrintTable (input[i], size[i], 6);
-      PrintTable (expOutput[i], size[i], 6);
-      int Keys[] = { 3, 25, -1, 65, 3, -10 },
-         foundIndex = BinarySearch (expOutput[i], size[i], Keys[i]);
-      printf (" | %-3d  | ", Keys[i]);
-      printf (foundIndex != -1 ? GREEN_TEXT "Element %3d found at %d" RESET_TEXT
-              : RED_TEXT "Element %3d Not Found " RESET_TEXT, Keys[i], foundIndex);
-      printf (" |\n");
+      int size = sizes[i], * actualOutput = malloc (size * sizeof (int)), expectedIndex = -1,
+         keys[] = { 3, 25, -1, 65, 2, -10 }, foundIndex = BinarySearch (expOutput[i], size, keys[i]);
+      PrintTable (input[i], size, 6);
+      PrintTable (expOutput[i], size, 6);
+      for (int j = 0; j < size; j++) {
+         if (expOutput[i][j] == keys[i]) {
+            expectedIndex = j;
+            break;
+         }
+      }
+      printf (" | %-3d  |", keys[i]);
+      if (foundIndex != -1) {
+         printf (GREEN_TEXT "Element %3d found at %d " RESET_TEXT, keys[i], foundIndex);
+         printf ("|");
+         printf ((foundIndex == expectedIndex) ? GREEN_TEXT "    pass"  RESET_TEXT :
+                 RED_TEXT "    fail" RESET_TEXT);
+      }
+      else {
+         printf (RED_TEXT "Element %3d Not Found " RESET_TEXT, keys[i]);
+         printf (" |");
+         printf ((expectedIndex == -1) ? GREEN_TEXT "    pass" RESET_TEXT :
+                 RED_TEXT "    fail" RESET_TEXT);
+      }
+      printf ("          |\n");
       free (actualOutput);
+   }
+}
+
+int GetInputElement (int index) {
+   char buffer[256], * endptr;
+   while (true) {
+      printf ("Enter element %d: ", index + 1);
+      fgets (buffer, sizeof (buffer), stdin);
+      int element = strtol (buffer, &endptr, 10);
+      if (endptr != buffer && *endptr == '\n') return element;
+      else printf ("Invalid input, please enter a valid integer.\n");
    }
 }
 
 void UserInput () {
    int arr[100] = { 0 }, n;
    char buffer[256], * endptr;
-   while (1) {
+   while (true) {
       printf ("Enter number of elements: ");
       fgets (buffer, sizeof (buffer), stdin);
       n = strtol (buffer, &endptr, 10);
-      // Check for valid input
-      if (endptr != buffer && *endptr == '\n' && n > 0 && n <= 100) break; // Valid input,exit loop
+      if (endptr != buffer && *endptr == '\n' && n > 0 && n <= 100) break;
    }
-   for (int i = 0; i < n; i++) {
-      printf ("Enter element %d: ", i + 1);
-      fgets (buffer, sizeof (buffer), stdin);
-      arr[i] = strtol (buffer, &endptr, 10);
-      if (endptr == buffer || *endptr != '\n') i--;
-   }
+   for (int i = 0; i < n; i++) arr[i] = GetInputElement (i);
    printf ("Original array: ");
    for (int i = 0; i < n; i++) printf ("%d ", arr[i]);
    printf ("\n");
@@ -101,7 +128,7 @@ void UserInput () {
    printf ("Sorted array: ");
    for (int i = 0; i < n; i++) printf ("%d ", arr[i]);
    printf ("\n");
-   while (1) {
+   while (true) {
       char searchChoice;
       printf ("Do you want Search (y|n)? : ");
       searchChoice = _getch ();
@@ -111,7 +138,7 @@ void UserInput () {
          fgets (buffer, sizeof (buffer), stdin);
          int key = strtol (buffer, &endptr, 10), res = BinarySearch (arr, n, key);
          if (endptr != buffer && *endptr == '\n') {
-            printf ((res != -1) ? "Element %d found at index %d\n"
+            printf (res != -1 ? "Element %d found at index %d\n"
                     : "Element %d is not found\n", key, res);
             break;
          }
@@ -124,23 +151,23 @@ void UserInput () {
 
 int main () {
    TestCases ();
-   char choice;  // Variable to hold a single character choice
-   while (1) {
+   char choice;
+   while (true) {
       printf ("\n1. User Input\n2. Exit the program\n"
               "Enter your choice (1 or 2 ) : ");
       choice = _getch ();
       printf ("%c\n", choice);
       system ("cls");
-      if (choice == '1' || choice == '2') {
-         switch (choice) {
-            case '1':
-               UserInput ();
-               break;
-            case '2':
-               return 0;
-         }
+      switch (choice) {
+         case '1':
+            UserInput ();
+            break;
+         case '2':
+            return 0;
+         default:
+            printf (RED_TEXT "Invalid choice. Please choose 1, 2\n" RESET_TEXT);
+            break;
       }
-      else printf (RED_TEXT "Invalid choice. Please choose 1, 2\n" RESET_TEXT);
    }
    return 0;
 }
