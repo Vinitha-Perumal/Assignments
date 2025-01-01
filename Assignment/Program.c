@@ -17,9 +17,29 @@ void PrintChessBoard (FILE* output);
 int CompareFiles (const char* outputFile, const char* referenceFile);
 
 /// <summary>To print a character(or an empty space) to both the output file and the console </summary>
-void PrintCell (FILE* output, wchar_t piece);
+void PrintChar (FILE* output, int row, int col);
 
-void PrintCell (FILE* output, wchar_t character) {
+void PrintChar (FILE* output, int row, int col) {
+   wchar_t whitePieces[8] = { 0x2656, 0x2658, 0x2657, 0x2655, 0x2654, 0x2657, 0x2658, 0x2656 },
+      blackPieces[8] = { 0x265C, 0x265E, 0x265D, 0x265B, 0x265A, 0x265D, 0x265E, 0x265C },
+      whitePawn = 0x2659, blackPawn = 0x265F, character = L'\0';
+   switch (row) {
+      case 0:
+         character = blackPieces[col];
+         break;
+      case 1:
+         character = blackPawn;
+         break;
+      case 6:
+         character = whitePawn;
+         break;
+      case 7:
+         character = whitePieces[col];
+         break;
+      default:
+         character = L'\0';
+         break;
+   }
    if (character != L'\0') {
       fwprintf (output, L" %lc ", character);
       wprintf (L" %lc ", character);
@@ -34,9 +54,6 @@ void PrintChessBoard (FILE* output) {
    const wchar_t* topBorder = L"┏━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┓\n",
       * middleBorder = L"┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫\n",
       * bottomBorder = L"┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛\n";
-   wchar_t whitePieces[8] = { 0x2656, 0x2658, 0x2657, 0x2655, 0x2654, 0x2657, 0x2658, 0x2656 },
-      blackPieces[8] = { 0x265C, 0x265E, 0x265D, 0x265B, 0x265A, 0x265D, 0x265E, 0x265C },
-      whitePawn = 0x2659, blackPawn = 0x265F;
    // top border
    fputws (topBorder, output);
    wprintf (L"%s", topBorder);
@@ -45,22 +62,7 @@ void PrintChessBoard (FILE* output) {
       fputws (L"┃", output);
       wprintf (L"┃");
       for (int j = 0; j < 8; j++) {
-         wchar_t piece = L'\0';
-         switch (i) {
-            case 0:
-               piece = blackPieces[j];
-               break;
-            case 1:
-               piece = blackPawn;
-               break;
-            case 6:
-               piece = whitePawn;
-               break;
-            case 7:
-               piece = whitePieces[j];
-               break;
-         }
-         PrintCell (output, piece);
+         PrintChar (output, i, j);
          fputws (L"┃", output);
          wprintf (L"┃");
       }
@@ -96,7 +98,6 @@ int CompareFiles (const char* outputFile, const char* referenceFile) {
          wprintf (L"\nMismatch at row %d, column %d\n", row, col);
          fclose (output);
          fclose (reference);
-         return -2;
       }
       if (outputChar == L'\n' || referenceChar == L'\n') {
          row++;
