@@ -16,12 +16,12 @@ void TestCases () {
       expectedOutput[][4] = { { 0, 0, 0, 1 }, { 1, 1, 2, 0 }, { 5, 0, 0, 0 } },
       numOfTestCases = sizeof (cashPaid) / sizeof (cashPaid[0]);
    for (int i = 0; i < numOfTestCases; i++) {
-      int balance = cashPaid[i] - actualAmount[i], coins[4] = { 0 },
-         res = Cash (balance, denominations, sizeof (denominations) / sizeof (denominations[i]), coins);
-      if (res != 1) {
-         printf ("Testcase %d failed\n invalid Balance\n", i + 1);
+      if (cashPaid[i] < actualAmount[i]) {
+         printf ("Testcase %d failed\nCashPaid is less than actual amount\n", i + 1);
          return;
       }
+      int balance = cashPaid[i] - actualAmount[i], coins[4] = { 0 },
+         res = Cash (balance, denominations, sizeof (denominations) / sizeof (denominations[i]), coins);
       for (int j = 0; j < 4; j++) {
          if (coins[j] != expectedOutput[i][j]) {
             printf ("TestCase %d Failed\nCash Paid: %d\nActual Amount: %d\nExpected Output: 10Rs. %d,"
