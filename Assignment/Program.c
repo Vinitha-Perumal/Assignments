@@ -7,6 +7,7 @@
 // Program on A6 branch.
 // ------------------------------------------------------------------------------------------------
 #include <stdio.h>
+#include <stdbool.h>
 #include <io.h>
 #include <fcntl.h>
 
@@ -14,7 +15,7 @@
 void PrintChessBoard (FILE* output);
 
 /// <summary>To compare the output file with a reference file </summary>
-int CompareFiles (const char* outputFile, const char* referenceFile);
+bool CompareFiles (const char* outputFile, const char* referenceFile, int* mismatchRow, int* mismatchCol);
 
 /// <summary>To print a character(or an empty space) to both the output file and the console </summary>
 void PrintChar (FILE* output, int row, int col);
@@ -78,24 +79,20 @@ void PrintChessBoard (FILE* output) {
    wprintf (L"%s", bottomBorder);
 }
 
-int CompareFiles (const char* outputFile, const char* referenceFile) {
+bool CompareFiles (const char* outputFile, const char* referenceFile, int* mismatchRow, int* mismatchCol) {
    FILE* output = fopen (outputFile, "r, ccs=UTF-8"),
       * reference = fopen (referenceFile, "r, ccs=UTF-8");
-   if (output == NULL || reference == NULL) {
-      wprintf (L"Error opening files for comparison.\n");
-      return -1;
-   }
+   if (output == NULL || reference == NULL) return false;
    int row = 1, col = 1;
    while (1) {
       wchar_t outputChar = fgetwc (output), referenceChar = fgetwc (reference);
       if (outputChar == WEOF && referenceChar == WEOF) {
-         wprintf (L"\n\nTest Passed\n");
          fclose (output);
          fclose (reference);
-         return 0;
+         return true;
       }
       if (outputChar != referenceChar) {
-         wprintf (L"\nMismatch at row %d, column %d\n", row, col);
+         *mismatchRow = row, * mismatchCol = col;
          fclose (output);
          fclose (reference);
       }
@@ -116,5 +113,7 @@ int main () {
    }
    PrintChessBoard (output);
    fclose (output);
-   return CompareFiles ("output.txt", "ref.txt");
+   int mismatchRow = 0, mismatchCol = 0;
+   bool res = CompareFiles ("output.txt", "ref.txt", &mismatchRow, &mismatchCol);
+   wprintf (res ? L"\n\nTest Passed\n" : L"\nMismatch at row %d, column %d\n", mismatchRow, mismatchCol);
 }
