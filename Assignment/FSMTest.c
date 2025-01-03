@@ -14,6 +14,7 @@
 #include <stdbool.h>
 
 int ExecProgram (char* exeFilePathAndName, const char* inputFilePathAndName, char* outputFilePathAndName);
+void CloseFiles (FILE* file1, FILE* file2);
 bool CompareFiles (char* file1, const char* file2, int* pos, char* ch1, char* ch2);
 
 /// <summary>
@@ -72,6 +73,11 @@ int ExecProgram (char* exeFilePathAndName, const char* inputFilePathAndName, cha
 
 }
 
+void CloseFiles (FILE* file1, FILE* file2) {
+   if (file1) fclose (file1);
+   if (file2) fclose (file2);
+}
+
 bool CompareFiles (char* file1, const char* file2, int* pos, char* ch1, char* ch2) {
    FILE* f1 = fopen (file1, "r"), * f2 = fopen (file2, "r");
    if (f1 == NULL || f2 == NULL) {
@@ -81,38 +87,34 @@ bool CompareFiles (char* file1, const char* file2, int* pos, char* ch1, char* ch
    fseek (f1, 0, SEEK_END);
    fseek (f2, 0, SEEK_END);
    long len1 = ftell (f1), len2 = ftell (f2);
+   if (len1 != len2) {
+      CloseFiles (f1, f2);
+      return false;
+   }
+   char* expectedBuffer = (char*)malloc (len1), * outputBuffer = (char*)malloc (len2);
+   if (expectedBuffer == NULL || outputBuffer == NULL) {
+      printf ("Memory allocation failed\n");
+      CloseFiles (f1, f2);
+      return false;
+   }
    fseek (f1, 0, SEEK_SET);
    fseek (f2, 0, SEEK_SET);
-   if (len1 != len2) {
-      fclose (f1);
-      fclose (f2);
-      return false;
-   }
-   char* buffer1 = (char*)malloc (len1), * buffer2 = (char*)malloc (len2);
-   if (buffer1 == NULL || buffer2 == NULL) {
-      printf ("Memory allocation failed\n");
-      fclose (f1);
-      fclose (f2);
-      return false;
-   }
-   fread (buffer1, 1, len1, f1);
-   fread (buffer2, 1, len2, f2);
+   fread (expectedBuffer, 1, len1, f1);
+   fread (outputBuffer, 1, len2, f2);
    for (long i = 0; i < len1; i++) {
-      if (buffer1[i] != buffer2[i]) {
+      if (expectedBuffer[i] != outputBuffer[i]) {
          *pos = i;
-         *ch1 = buffer1[i];
-         *ch2 = buffer2[i];
-         free (buffer1);
-         free (buffer2);
-         fclose (f1);
-         fclose (f2);
+         *ch1 = expectedBuffer[i];
+         *ch2 = outputBuffer[i];
+         free (expectedBuffer);
+         free (outputBuffer);
+         CloseFiles (f1, f2);
          return false;
       }
    }
-   free (buffer1);
-   free (buffer2);
-   fclose (f1);
-   fclose (f2);
+   free (expectedBuffer);
+   free (outputBuffer);
+   CloseFiles (f1, f2);
    return true;
 }
 
@@ -123,16 +125,16 @@ bool CompareFiles (char* file1, const char* file2, int* pos, char* ch1, char* ch
 /// <param name="argv">argv[1] is the name of the FSM</param>
 /// <returns></returns>
 int main (int argc, char** argv) {
-#define NTESTS 6
    if (argc != 2) {
       printf ("Usage: %s <FSM executable name>\n", argv[0]);
       return -1;
    }
-   const char* inputFiles[] = { "test1in.txt", "test2in.txt", "test3in.txt",
-                                "test4in.txt", "test5in.txt", "test6in.txt" },
-      * expectedFiles[] = { "test1ref.txt", "test2ref.txt", "test3ref.txt",
-                         "test4ref.txt", "test5ref.txt", "test6ref.txt" };
-   char outputFile[] = { "testout.txt" };
+   const char* inputFiles[] = { "TData/test1in.txt", "TData/test2in.txt", "TData/test3in.txt",
+                                "TData/test4in.txt", "TData/test5in.txt", "TData/test6in.txt" },
+      * expectedFiles[] = { "TData/test1ref.txt", "TData/test2ref.txt", "TData/test3ref.txt",
+                         "TData/test4ref.txt", "TData/test5ref.txt", "TData/test6ref.txt" };
+   char* outputFile = "TData/testout.txt";
+   int NTESTS = sizeof (inputFiles) / sizeof (inputFiles[0]);
    for (int i = 0; i < NTESTS; i++) {
       const char* inputFile = inputFiles[i], * expectedFile = expectedFiles[i];
       if (ExecProgram (argv[1], inputFile, outputFile) != 0) {
@@ -142,8 +144,8 @@ int main (int argc, char** argv) {
       int pos = 0;
       char expectedChar, actualChar;
       if (!CompareFiles (outputFile, expectedFile, &pos, &expectedChar, &actualChar)) {
-         printf ("Test %d failed with input file: %s\n", i + 1, inputFile);
-         printf ("Test %d failed at bit %d, Expected '%c', actual '%c'\n", i + 1, pos, expectedChar, actualChar);
+         printf ("Test %d failed with input file: %s\nTest % d failed at bit % d, Expected '%c',"
+                 "actual '%c'\n", i + 1, inputFile, i + 1, pos, expectedChar, actualChar);
          return 1;
       }
    }
