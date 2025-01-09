@@ -18,36 +18,13 @@ void PrintChessBoard (FILE* output);
 bool CompareFiles (const char* outputFile, const char* referenceFile, int* mismatchRow, int* mismatchCol);
 
 /// <summary>To print a character(or an empty space) to both the output file and the console </summary>
-void PrintChar (FILE* output, int row, int col);
+void PrintChar (FILE* output, wchar_t character);
 
-void PrintChar (FILE* output, int row, int col) {
-   wchar_t whitePieces[8] = { 0x2656, 0x2658, 0x2657, 0x2655, 0x2654, 0x2657, 0x2658, 0x2656 },
-      blackPieces[8] = { 0x265C, 0x265E, 0x265D, 0x265B, 0x265A, 0x265D, 0x265E, 0x265C },
-      whitePawn = 0x2659, blackPawn = 0x265F, character = L'\0';
-   switch (row) {
-      case 0:
-         character = blackPieces[col];
-         break;
-      case 1:
-         character = blackPawn;
-         break;
-      case 6:
-         character = whitePawn;
-         break;
-      case 7:
-         character = whitePieces[col];
-         break;
-      default:
-         character = L'\0';
-         break;
-   }
+void PrintChar (FILE* output, wchar_t character) {
    if (character != L'\0') {
-      fwprintf (output, L" %lc ", character);
-      wprintf (L" %lc ", character);
-   }
-   else {
-      fputws (L"   ", output);
-      wprintf (L"   ");
+      wchar_t tempArray[] = { character, L'\0' };
+      fputws (tempArray, output);
+      wprintf (L"%s", tempArray);
    }
 }
 
@@ -55,17 +32,38 @@ void PrintChessBoard (FILE* output) {
    const wchar_t* topBorder = L"┏━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┓\n",
       * middleBorder = L"┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫\n",
       * bottomBorder = L"┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛\n";
+   wchar_t whitePieces[8] = { 0x2656, 0x2658, 0x2657, 0x2655, 0x2654, 0x2657, 0x2658, 0x2656 },
+      blackPieces[8] = { 0x265C, 0x265E, 0x265D, 0x265B, 0x265A, 0x265D, 0x265E, 0x265C },
+      whitePawn = 0x2659, blackPawn = 0x265F;
    // top border
    fputws (topBorder, output);
    wprintf (L"%s", topBorder);
    for (int i = 0; i < 8; i++) {
       // left vertical border
-      fputws (L"┃", output);
-      wprintf (L"┃");
+      fputws (L"┃ ", output);
+      wprintf (L"┃ ");
       for (int j = 0; j < 8; j++) {
-         PrintChar (output, i, j);
-         fputws (L"┃", output);
-         wprintf (L"┃");
+         wchar_t piece = L'\0';
+         switch (i) {
+            case 0:
+               piece = blackPieces[j];
+               break;
+            case 1:
+               piece = blackPawn;
+               break;
+            case 6:
+               piece = whitePawn;
+               break;
+            case 7:
+               piece = whitePieces[j];
+               break;
+            default:
+               piece = L' ';
+               break;
+         }
+         PrintChar (output, piece);
+         fputws (L" ┃ ", output);
+         wprintf (L" ┃ ");
       }
       wprintf (L"\n");
       fputws (L"\n", output);
@@ -95,6 +93,7 @@ bool CompareFiles (const char* outputFile, const char* referenceFile, int* misma
          *mismatchRow = row, * mismatchCol = col;
          fclose (output);
          fclose (reference);
+         return false;
       }
       if (outputChar == L'\n' || referenceChar == L'\n') {
          row++;
