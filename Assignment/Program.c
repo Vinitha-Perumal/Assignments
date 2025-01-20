@@ -18,13 +18,12 @@ void PrintChessBoard (FILE* output);
 bool CompareFiles (const char* outputFile, const char* referenceFile, int* mismatchRow, int* mismatchCol);
 
 /// <summary>To print a character(or an empty space) to both the output file and the console </summary>
-void PrintChar (FILE* output, wchar_t character);
+void PrintChar (FILE* output, wchar_t* character);
 
-void PrintChar (FILE* output, wchar_t character) {
-   if (character != L'\0') {
-      wchar_t tempArray[] = { character, L'\0' };
-      fputws (tempArray, output);
-      wprintf (L"%s", tempArray);
+void PrintChar (FILE* output, wchar_t* character) {
+   if (*character != L'\0') {
+      fputws (character, output);
+      wprintf (L"%s", character);
    }
 }
 
@@ -32,10 +31,10 @@ void PrintChessBoard (FILE* output) {
    const wchar_t* topBorder = L"┏━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┓\n",
       * middleBorder = L"┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫\n",
       * bottomBorder = L"┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛\n";
-   wchar_t whitePieces[8] = { 0x2656, 0x2658, 0x2657, 0x2655, 0x2654, 0x2657, 0x2658, 0x2656 },
-      blackPieces[8] = { 0x265C, 0x265E, 0x265D, 0x265B, 0x265A, 0x265D, 0x265E, 0x265C },
-      whitePawn = 0x2659, blackPawn = 0x265F;
-   // top border
+   wchar_t* whitePieces[8] = { L"\u2656", L"\u2658", L"\u2657", L"\u2655", L"\u2654", L"\u2657", L"\u2658", L"\u2656" },
+      * blackPieces[8] = { L"\u265C", L"\u265E", L"\u265D", L"\u265B", L"\u265A", L"\u265D", L"\u265E", L"\u265C" },
+      * whitePawn = L"\u2659", * blackPawn = L"\u265F";
+  // top border
    fputws (topBorder, output);
    wprintf (L"%s", topBorder);
    for (int i = 0; i < 8; i++) {
@@ -43,7 +42,7 @@ void PrintChessBoard (FILE* output) {
       fputws (L"┃ ", output);
       wprintf (L"┃ ");
       for (int j = 0; j < 8; j++) {
-         wchar_t piece = L'\0';
+         wchar_t* piece = L'\0';
          switch (i) {
             case 0:
                piece = blackPieces[j];
@@ -58,7 +57,7 @@ void PrintChessBoard (FILE* output) {
                piece = whitePieces[j];
                break;
             default:
-               piece = L' ';
+               piece = L" ";
                break;
          }
          PrintChar (output, piece);
