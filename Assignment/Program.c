@@ -56,9 +56,8 @@ void PrintChessBoard (FILE* output) {
                break;
          }
          PrintOutput (output, piece);
-         PrintOutput (output, j < 7 ? L" ┃ " : L" ┃");
+         PrintOutput (output, j < 7 ? L" ┃ " : L" ┃\n");
       }
-      PrintOutput (output, L"\n");
       if (i < 7) PrintOutput (output, L"┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫\n");
    }
    // bottom border
