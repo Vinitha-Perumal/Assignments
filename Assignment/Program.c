@@ -18,9 +18,9 @@ void PrintChessBoard (FILE* output);
 bool CompareFiles (const char* outputFile, const char* referenceFile, int* mismatchRow, int* mismatchCol);
 
 /// <summary>To print a character(or an empty space) to both the output file and the console </summary>
-void PrintChar (FILE* output, const wchar_t* character);
+void PrintOutput (FILE* output, const wchar_t* character);
 
-void PrintChar (FILE* output, const wchar_t* character) {
+void PrintOutput (FILE* output, const wchar_t* character) {
    if (*character != L'\0') {
       fputws (character, output);
       wprintf (L"%s", character);
@@ -28,17 +28,14 @@ void PrintChar (FILE* output, const wchar_t* character) {
 }
 
 void PrintChessBoard (FILE* output) {
-   const wchar_t* topBorder = L"┏━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┓\n",
-      * middleBorder = L"┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫\n",
-      * bottomBorder = L"┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛\n";
    wchar_t* whitePieces[8] = { L"\u2656", L"\u2658", L"\u2657", L"\u2655", L"\u2654", L"\u2657", L"\u2658", L"\u2656" },
       * blackPieces[8] = { L"\u265C", L"\u265E", L"\u265D", L"\u265B", L"\u265A", L"\u265D", L"\u265E", L"\u265C" },
       * whitePawn = L"\u2659", * blackPawn = L"\u265F";
   // top border
-   PrintChar (output, topBorder);
+   PrintOutput (output, L"┏━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┓\n");
    for (int i = 0; i < 8; i++) {
       // left vertical border
-      PrintChar (output, L"┃ ");
+      PrintOutput (output, L"┃ ");
       for (int j = 0; j < 8; j++) {
          wchar_t* piece = L'\0';
          switch (i) {
@@ -58,14 +55,14 @@ void PrintChessBoard (FILE* output) {
                piece = L" ";
                break;
          }
-         PrintChar (output, piece);
-         PrintChar (output, j < 7 ? L" ┃ " : L" ┃");
+         PrintOutput (output, piece);
+         PrintOutput (output, j < 7 ? L" ┃ " : L" ┃");
       }
-      PrintChar (output, L"\n");
-      if (i < 7) PrintChar (output, middleBorder);
+      PrintOutput (output, L"\n");
+      if (i < 7) PrintOutput (output, L"┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫\n");
    }
    // bottom border
-   PrintChar (output, bottomBorder);
+   PrintOutput (output, L"┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛\n");
 }
 
 bool CompareFiles (const char* outputFile, const char* referenceFile, int* mismatchRow, int* mismatchCol) {
