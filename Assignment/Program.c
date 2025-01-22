@@ -18,9 +18,9 @@ void PrintChessBoard (FILE* output);
 bool CompareFiles (const char* outputFile, const char* referenceFile, int* mismatchRow, int* mismatchCol);
 
 /// <summary>To print a character(or an empty space) to both the output file and the console </summary>
-void PrintChar (FILE* output, wchar_t* character);
+void PrintChar (FILE* output, const wchar_t* character);
 
-void PrintChar (FILE* output, wchar_t* character) {
+void PrintChar (FILE* output, const wchar_t* character) {
    if (*character != L'\0') {
       fputws (character, output);
       wprintf (L"%s", character);
@@ -35,12 +35,10 @@ void PrintChessBoard (FILE* output) {
       * blackPieces[8] = { L"\u265C", L"\u265E", L"\u265D", L"\u265B", L"\u265A", L"\u265D", L"\u265E", L"\u265C" },
       * whitePawn = L"\u2659", * blackPawn = L"\u265F";
   // top border
-   fputws (topBorder, output);
-   wprintf (L"%s", topBorder);
+   PrintChar (output, topBorder);
    for (int i = 0; i < 8; i++) {
       // left vertical border
-      fputws (L"┃ ", output);
-      wprintf (L"┃ ");
+      PrintChar (output, L"┃ ");
       for (int j = 0; j < 8; j++) {
          wchar_t* piece = L'\0';
          switch (i) {
@@ -61,19 +59,13 @@ void PrintChessBoard (FILE* output) {
                break;
          }
          PrintChar (output, piece);
-         fputws (L" ┃ ", output);
-         wprintf (L" ┃ ");
+         PrintChar (output, j < 7 ? L" ┃ " : L" ┃");
       }
-      wprintf (L"\n");
-      fputws (L"\n", output);
-      if (i < 7) {
-         fputws (middleBorder, output);
-         wprintf (L"%s", middleBorder);
-      }
+      PrintChar (output, L"\n");
+      if (i < 7) PrintChar (output, middleBorder);
    }
    // bottom border
-   fputws (bottomBorder, output);
-   wprintf (L"%s", bottomBorder);
+   PrintChar (output, bottomBorder);
 }
 
 bool CompareFiles (const char* outputFile, const char* referenceFile, int* mismatchRow, int* mismatchCol) {
